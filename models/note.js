@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 
-var noteSchema = new mongoose.Schema({
-  type: String,
+var NoteSchema = new mongoose.Schema({
+  kind: String,
   content: String,
   date: Date,
   author: {
@@ -19,11 +19,11 @@ var noteSchema = new mongoose.Schema({
     username: String
   },
   likes: [
-     {
+    {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Like"
     }
     ]
 });
 
-module.exports = mongoose.model("Note", noteSchema);
+module.exports = mongoose.model("Note", NoteSchema);

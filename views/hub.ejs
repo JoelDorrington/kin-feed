@@ -1,0 +1,54 @@
+<% include ./partials/header %>
+<div class="ui container">
+  <div class="ui three column grid">
+    <!--Vertical Menu Bar-->
+    <div class="left floated four wide column">
+      <div class="ui secondary vertical pointing menu">
+        <a class="active item">
+          Home
+        </a>
+        <a class="item">
+          Leave a Note
+        </a>
+        <a class="item">
+          Pinned Notes
+        </a>
+        <a class="item">
+          Public Notes
+        </a>
+      </div>
+    </div>
+    <!--Your Recent Notes-->
+    <div class="eight wide centered column">
+      <h2 class="ui center aligned header">Your Recent Notes</h2>
+      <% user.receivedNotes.forEach(function(note){ %>
+        <div class="ui raised segment">
+          <h4 class="header"><%= note.kind %></h4>
+          <p><%= note.content %></p>
+        </div>
+      <% }) %>    
+    </div>
+    <!--Recent Activity-->
+    <div class="right floated four wide column">
+      <h3 class="ui center aligned header">Recent Activity</h3>
+      <div class="ui segments">
+        <div class="ui segment">
+          <p>Tsara complimented Chantal</p>
+        </div>
+        <div class="ui segment">
+          <p>Jaque encouraged Alex</p>
+        </div>
+        <div class="ui segment">
+          <p>Dave shared a memory with Chantal</p>
+        </div>
+        <div class="ui segment">
+          <p>Eric complimented Allesia</p>
+        </div>
+        <div class="ui segment">
+          <p>Nicole shared a memory with Nick</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% include ./partials/footer %>

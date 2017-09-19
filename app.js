@@ -5,7 +5,8 @@ var express = require("express"),
     bodyParser = require("body-parser"),
     LocalStategy = require("passport-local"),
     passportLocalMongoose = require("passport-local-mongoose"),
-    User = require("./models/user");
+    User = require("./models/user"),
+    seedDB = require("./seeds");
 
 mongoose.connect("mongodb://localhost/family-website", {useMongoClient: true});
 mongoose.Promise = global.Promise;
@@ -26,6 +27,12 @@ passport.use(new LocalStategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use(function(req, res, next){
+  res.locals.currentUser = req.user;
+  next();
+});
+
+// seedDB();
 
 // Core Routes
 app.get("/", function(req, res){
@@ -33,6 +40,17 @@ app.get("/", function(req, res){
 });
 app.get("/secret", isLoggedIn, function(req, res){
   res.render("secret-page");
+});
+
+app.get("/hub", isLoggedIn, function(req, res){
+  User.findById(req.user._id).populate("receivedNotes").exec(function(err, user){
+    if(err){
+      console.log(err);
+    } else {
+      console.log(user.receivedNotes);
+      res.render("hub", {user: user});
+    }
+  });
 });
 
 // Register Routes
@@ -56,7 +74,7 @@ app.get("/login", function(req, res){
   res.render("login");
 });
 app.post("/login", passport.authenticate("local", {
-  successRedirect: "/secret",
+  successRedirect: "/hub",
   failureRedirect: "/login"
 }), function(req, res){
 });

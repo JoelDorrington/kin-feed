@@ -2,5 +2,22 @@
 <html>
 <head>
   <title>The Bourgeois Family Board</title>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css"></link>
+  <link rel="stylesheet" type="text/css" href="/styles/style.css"></link>
 </head>
 <body>
+  <div class="ui large top fixed menu">
+  <a class="item" href="/hub"><i class="users icon"></i>Family Circle</a>
+  <div class="right menu">
+  <% if(!currentUser){ %>
+      <a class="item" href="/login">Log in</a>
+      <a class="item" href="/register">Sign up</a>
+    <% } else { %>  
+      <div class="borderless item" href= "#">
+        <img class="ui avatar image" src="/images/profilepic-placeholder.png">
+        <span>Hi, <%= currentUser.username %>!</span>
+        </div>
+      <a class="item" href="/logout">Log out</a>
+    <% } %>
+  </div>
+</div>
