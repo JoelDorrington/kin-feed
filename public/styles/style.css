@@ -1,3 +1,6 @@
 body {
   padding-top: 100px;
 }
+.pull-right{
+  text-align: right;
+}

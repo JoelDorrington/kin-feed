@@ -7,7 +7,7 @@
         <a class="active item">
           Home
         </a>
-        <a class="item">
+        <a href="/notes/new" class="item">
           Leave a Note
         </a>
         <a class="item">
@@ -23,8 +23,9 @@
       <h2 class="ui center aligned header">Your Recent Notes</h2>
       <% user.receivedNotes.forEach(function(note){ %>
         <div class="ui raised segment">
-          <h4 class="header"><%= note.kind %></h4>
+          <h4 class="header"><%= note.kind %> from <%= note.author.username %> </h4>
           <p><%= note.content %></p>
+          <p class="pull-right"><%= moment(note.date).fromNow() %> <a href="/notes/reply" class="ui mini button">Reply</a></p>
         </div>
       <% }) %>    
     </div>
@@ -32,21 +33,13 @@
     <div class="right floated four wide column">
       <h3 class="ui center aligned header">Recent Activity</h3>
       <div class="ui segments">
-        <div class="ui segment">
-          <p>Tsara complimented Chantal</p>
-        </div>
-        <div class="ui segment">
-          <p>Jaque encouraged Alex</p>
-        </div>
-        <div class="ui segment">
-          <p>Dave shared a memory with Chantal</p>
-        </div>
-        <div class="ui segment">
-          <p>Eric complimented Allesia</p>
-        </div>
-        <div class="ui segment">
-          <p>Nicole shared a memory with Nick</p>
-        </div>
+        <!--*****Populate with recent activity log******-->
+        <% activity.notes.forEach(function(note){ %>
+          <div class="ui segment">
+            <% note.kind = note.kind.toLowerCase() %>
+            <p><%= note.author.username %> sent <% if(note.kind == "memory"){ %> a <%= note.kind %><% } else {%><%= note.kind %><% } %> to <%= note.recipient.username %></p>
+          </div>
+        <% }) %>  
       </div>
     </div>
   </div>

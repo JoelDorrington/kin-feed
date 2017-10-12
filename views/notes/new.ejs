@@ -1,0 +1,49 @@
+<% include ../partials/header %>
+
+<div class="ui container">
+<form action="/notes" method="POST" class="ui form">
+  <div class="field">
+      <label>Note Type</label>
+      <div class="ui selection dropdown">
+          <input type="hidden" name="note[kind]">
+          <i class="dropdown icon"></i>
+          <div class="default text">Note Type</div>
+          <div class="menu">
+              <div class="item" data-value="Gratitude">Gratitude</div>
+              <div class="item" data-value="Admiration">Admiration</div>
+              <div class="item" data-value="Memory">Memory</div>
+              <div class="item" data-value="Encouragement">Encouragement</div>
+          </div>
+      </div>
+  </div>
+  <div class="field">
+      <label>Recipient</label>
+      <div class="ui selection dropdown">
+          <input type="hidden" name="note[recipient]">
+          <i class="dropdown icon"></i>
+          <div class="default text">Recipient</div>
+          <div class="menu">
+            <% users.forEach(function(user){ %>
+              <% if(!user._id.equals(currentUser._id)){ %>
+                <div class="item" data-value="<%= user._id %>"><%= user.username %></div>
+              <% } %>
+            <% }) %>
+          </div>
+      </div>
+  </div>
+  </select>
+  <div class="field">
+    <label>Content</label>
+    <textarea class="" name="note[content]" lines="2"></textarea>
+  </div>
+  <button class="ui button" type="submit">Submit</button>
+</form>
+</div>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js"></script>
+  <script>
+    $(document).ready(function(){
+      $('.ui.selection.dropdown').dropdown();
+    });
+  </script>
+<% include ../partials/footer %>

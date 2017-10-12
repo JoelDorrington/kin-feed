@@ -16,14 +16,9 @@ var NoteSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
     },
-    username: String
+    username: String 
   },
-  likes: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Like"
-    }
-    ]
+  likes: Number
 });
 
 module.exports = mongoose.model("Note", NoteSchema);

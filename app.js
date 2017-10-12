@@ -5,7 +5,10 @@ var express = require("express"),
     bodyParser = require("body-parser"),
     LocalStategy = require("passport-local"),
     passportLocalMongoose = require("passport-local-mongoose"),
+    moment = require("moment"),
     User = require("./models/user"),
+    Note = require("./models/note"),
+    RecentActivity = require("./models/recent-activity"),
     seedDB = require("./seeds");
 
 mongoose.connect("mongodb://localhost/family-website", {useMongoClient: true});
@@ -33,6 +36,13 @@ app.use(function(req, res, next){
 });
 
 // seedDB();
+// RecentActivity.create({notes: []}, function(err, recentActivity){
+//   if(err){
+//     console.log(err)
+//   } else {
+//     console.log("Created recent activity log")
+//   }
+// })
 
 // Core Routes
 app.get("/", function(req, res){
@@ -47,8 +57,60 @@ app.get("/hub", isLoggedIn, function(req, res){
     if(err){
       console.log(err);
     } else {
-      console.log(user.receivedNotes);
-      res.render("hub", {user: user});
+      RecentActivity.findById("59c385ad74e35a2139738986").populate("notes").exec(function(err, activity){
+        if(err){
+          console.log(err);
+        } else {
+          res.render("hub", {user: user, moment: moment, activity: activity});
+        }
+      });
+    }
+  });
+});
+
+//Note routes
+app.get("/notes/new", isLoggedIn, function(req, res){
+  User.find({}, function(err, users){
+    if(err){
+      console.log(err);
+    } else {
+      res.render("notes/new", {users: users});
+    }
+  });
+});
+
+app.post("/notes", isLoggedIn, function(req, res){
+  var newNote = req.body.note;
+  var Author = {id: req.user._id, username: req.user.username};
+  newNote.author = Author;
+  User.findById(newNote.recipient, function(err, user){
+    if(err){
+      console.log(err);
+    } else {
+      Note.create(newNote, function(err, note){
+        if(err){
+          console.log(err);
+        } else {
+          note.date = moment();
+          note.recipient.id = user._id;
+          note.recipient.username = user.username;
+          note.save();
+          user.receivedNotes.unshift(note._id);
+          user.save();
+          RecentActivity.find({}, function(err, recentActivity){
+            if(err){
+              console.log(err);
+            } else {
+              recentActivity[0].notes.unshift(note._id);
+              if(recentActivity[0].notes.length > 5){
+                recentActivity[0].notes.pop();
+              }
+              recentActivity[0].save();
+              res.redirect("/hub");
+            }
+          });
+        }
+      });
     }
   });
 });
@@ -63,7 +125,7 @@ app.post("/register", function(req, res){
       console.log(err);
     } else {
       passport.authenticate("local")(req, res, function(){
-        res.redirect("/secret");
+        res.redirect("/hub");
       });
     }
   });
