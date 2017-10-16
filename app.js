@@ -79,6 +79,16 @@ app.get("/notes/new", isLoggedIn, function(req, res){
   });
 });
 
+app.get("/notes/reply/:id", isLoggedIn, function(req, res){
+  User.findById(req.params.id, function(err, recip){
+    if(err){
+      console.log(err);
+    } else {
+      res.render("notes/reply", {recipient: recip});
+    }
+  });
+});
+
 app.post("/notes", isLoggedIn, function(req, res){
   var newNote = req.body.note;
   var Author = {id: req.user._id, username: req.user.username};

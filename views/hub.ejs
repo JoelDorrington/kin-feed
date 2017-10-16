@@ -4,18 +4,10 @@
     <!--Vertical Menu Bar-->
     <div class="left floated four wide column">
       <div class="ui secondary vertical pointing menu">
-        <a class="active item">
-          Home
-        </a>
-        <a href="/notes/new" class="item">
-          Leave a Note
-        </a>
-        <a class="item">
-          Pinned Notes
-        </a>
-        <a class="item">
-          Public Notes
-        </a>
+        <a class="active item">Home</a>
+        <a href="/notes/new" class="item">Leave a Note</a>
+        <a class="item">Pinned Notes</a>
+        <a class="item">Public Notes</a>
       </div>
     </div>
     <!--Your Recent Notes-->
@@ -23,9 +15,9 @@
       <h2 class="ui center aligned header">Your Recent Notes</h2>
       <% user.receivedNotes.forEach(function(note){ %>
         <div class="ui raised segment">
-          <h4 class="header"><%= note.kind %> from <%= note.author.username %> </h4>
+          <h4 class="header"><%= note.kind %> from <%= note.author.username %>.</h4>
           <p><%= note.content %></p>
-          <p class="pull-right"><%= moment(note.date).fromNow() %> <a href="/notes/reply" class="ui mini button">Reply</a></p>
+          <p class="pull-right"><%= moment(note.date).fromNow() %> <a href="/notes/reply/<%= note.author.id %>" class="ui mini button">Send one back?</a></p>
         </div>
       <% }) %>    
     </div>
@@ -33,7 +25,6 @@
     <div class="right floated four wide column">
       <h3 class="ui center aligned header">Recent Activity</h3>
       <div class="ui segments">
-        <!--*****Populate with recent activity log******-->
         <% activity.notes.forEach(function(note){ %>
           <div class="ui segment">
             <% note.kind = note.kind.toLowerCase() %>

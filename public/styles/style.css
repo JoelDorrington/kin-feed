@@ -4,3 +4,7 @@ body {
 .pull-right{
   text-align: right;
 }
+
+.vertical.pointing.menu {
+  width: 100%;
+}
