@@ -8,6 +8,7 @@ var express = require("express"),
     moment = require("moment"),
     User = require("./models/user"),
     Note = require("./models/note"),
+    Thread = require("./models/thread"),
     RecentActivity = require("./models/recent-activity"),
     seedDB = require("./seeds");
 
@@ -68,6 +69,25 @@ app.get("/hub", isLoggedIn, function(req, res){
   });
 });
 
+app.get("/public", isLoggedIn, function(req, res){
+  getPublicData(function(data){
+    data.notes.reverse();
+    res.render("public", {data: data, moment: moment});
+  });
+});
+
+// CREATE THREAD
+app.post("/public/thread/new", isLoggedIn, function(req, res){
+  var newThread = {theme: req.body.theme, notes: []};
+  Thread.create(newThread, function(err, thread){
+    if(err){
+      console.log(err);
+    } else {
+      res.redirect("/notes/new/" + thread.theme);
+    }
+  });
+});
+
 //Note routes
 app.get("/notes/new", isLoggedIn, function(req, res){
   User.find({}, function(err, users){
@@ -78,6 +98,10 @@ app.get("/notes/new", isLoggedIn, function(req, res){
     }
   });
 });
+
+app.get("/notes/new/:thread", isLoggedIn, function(req, res){
+      res.render("notes/new", {thread: req.params.thread});
+  });
 
 app.get("/notes/reply/:id", isLoggedIn, function(req, res){
   User.findById(req.params.id, function(err, recip){
@@ -91,38 +115,32 @@ app.get("/notes/reply/:id", isLoggedIn, function(req, res){
 
 app.post("/notes", isLoggedIn, function(req, res){
   var newNote = req.body.note;
+  if(newNote.pub === "True"){
+    newNote.pub = true;
+  } else {
+    newNote.pub = false;
+  }
   var Author = {id: req.user._id, username: req.user.username};
   newNote.author = Author;
-  User.findById(newNote.recipient, function(err, user){
-    if(err){
-      console.log(err);
-    } else {
-      Note.create(newNote, function(err, note){
-        if(err){
-          console.log(err);
-        } else {
-          note.date = moment();
-          note.recipient.id = user._id;
-          note.recipient.username = user.username;
-          note.save();
-          user.receivedNotes.unshift(note._id);
-          user.save();
-          RecentActivity.find({}, function(err, recentActivity){
-            if(err){
-              console.log(err);
-            } else {
-              recentActivity[0].notes.unshift(note._id);
-              if(recentActivity[0].notes.length > 5){
-                recentActivity[0].notes.pop();
-              }
-              recentActivity[0].save();
-              res.redirect("/hub");
-            }
-          });
-        }
-      });
-    }
-  });
+  if(newNote.recipient){
+    User.findById(newNote.recipient, function(err, user){
+      if(err){
+        console.log(err);
+      } else {
+        createNote(newNote, user, res);
+      }
+    });
+  } else {
+    console.log(req.body.thread);
+    Thread.find({theme: req.body.thread}, function(err, threads){
+      if(err){
+        console.log(err);
+      } else {
+        console.log(threads);
+        createNote(newNote, threads[0], res);
+      }
+    });
+  }
 });
 
 // Register Routes
@@ -162,6 +180,71 @@ function isLoggedIn(req, res, next){
   }
   res.redirect("/login");
 }
+
+// GET ALL DATA FUNCTION
+
+var getPublicData = function(nextFunction){
+  Note.find({"pub": true}, function(err, notes){
+    if(err){
+      console.log(err);
+    } else {
+      User.find({}, function(err, users){
+        if(err){
+          console.log(err);
+        } else {
+          users.forEach(function(user){
+            user.hash = "";
+            user.salt = "";
+          });
+          Thread.find({}, function(err, threads){
+            if(err){
+              console.log(err);
+            } else {
+              var data = {
+                notes: notes,
+                users: users,
+                threads: threads
+              };
+              nextFunction(data);
+            }
+          });
+        }
+      });
+    }
+  });
+};
+
+var createNote = function(x, model, res){
+    Note.create(x, function(err, note){
+    if(err){
+      console.log(err);
+    } else {
+      note.date = moment();
+      if(model.username){
+        note.recipient.id = model._id;
+        note.recipient.username = model.username;
+      }
+      note.save();
+      model.receivedNotes.unshift(note._id);
+      model.save();
+      RecentActivity.find({}, function(err, recentActivity){
+        if(err){
+          console.log(err);
+        } else {
+          recentActivity[0].notes.unshift(note._id);
+          if(recentActivity[0].notes.length > 5){
+            recentActivity[0].notes.pop();
+          }
+          recentActivity[0].save();
+          var nP;
+          note.username ? nP = "/hub" : nP = "/public/";
+          res.redirect(nP);
+        }
+      });
+    }
+  });
+};
+
 
 app.listen(process.env.PORT, process.env.IP, function(){
   console.log("The family site is running.");

@@ -3,6 +3,7 @@ var mongoose = require("mongoose");
 var NoteSchema = new mongoose.Schema({
   kind: String,
   content: String,
+  pub: Boolean,
   date: Date,
   author: {
     id: {

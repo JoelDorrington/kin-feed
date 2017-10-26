@@ -1,5 +1,6 @@
 <% include ../partials/header %>
 
+<% if(!users){ var users = null } %>
 <div class="ui container">
   <div class="ui three column grid">
    <!--Vertical Menu Bar-->
@@ -8,7 +9,7 @@
           <a class="item" href="/hub">Home</a>
           <a class="active item" href="/notes/new">Leave a Note</a>
           <a class="item">Pinned Notes</a>
-          <a class="item">Public Notes</a>
+          <a class="item" href="/public">Public Notes</a>
         </div>
       </div>
   <!--Form-->
@@ -28,20 +29,41 @@
             </div>
           </div>
         </div>
+        <div class="inline fields">
+          <label for="pub">Public or Private?</label>
+          <div class="field">
+            <div class="ui radio checkbox">
+              <input type="radio" name="note[pub]" checked value="True" tabindex="0" class="hidden">
+              <label>Public</label>
+            </div>
+          </div>
+          <% if(users){ %>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="note[pub]" checked value="False" tabindex="0" class="hidden">
+                <label>Private</label>
+              </div>
+            </div>
+          <% } %>
+        </div>
         <div class="field">
-          <label>Recipient</label>
-          <div class="ui selection dropdown">
+          <label><%= users ? "Recipient" : "Thread" %></label>
+          <% if(users){ %>
+            <div class="ui selection dropdown">
               <input type="hidden" name="note[recipient]" required>
               <i class="dropdown icon"></i>
               <div class="default text">Recipient</div>
               <div class="menu">
-                <% users.forEach(function(user){ %>
-                  <% if(!user._id.equals(currentUser._id)){ %>
-                    <div class="item" data-value="<%= user._id %>"><%= user.username %></div>
-                  <% } %>
-                <% }) %>
+                  <% users.forEach(function(user){ %>
+                    <% if(!user._id.equals(currentUser._id)){ %>
+                      <div class="item" data-value="<%= user._id %>"><%= user.username %></div>
+                    <% } %>
+                  <% }) %>
               </div>
-          </div>
+            </div>
+          <% } else { %>
+            <input name="thread" value="<%= thread %>" class="ui disabled input">
+          <% } %>
         </div>
         <div class="field">
           <label>Note</label>
@@ -57,6 +79,7 @@
 <script>
   $(document).ready(function(){
     $('.ui.selection.dropdown').dropdown();
+    $('.ui.radio.checkbox').checkbox();
   });
 </script>
 <% include ../partials/footer %>

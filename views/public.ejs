@@ -1,0 +1,53 @@
+<% include ./partials/header %>
+
+<div class="ui container">
+  <div class="ui grid">
+    
+    <!--Vertical Menu Bar-->
+    <div class="left floated four wide column">
+      <div class="ui secondary vertical pointing menu">
+        <a href="/hub" class="item">Home</a>
+        <a href="/notes/new" class="item">Leave a Note</a>
+        <a href="#" class="item">Pinned Notes</a>
+        <a href="#" class="active item">Public Notes</a>
+      </div>
+      <hr/>
+      <form action="/public/thread/new" method="POST">
+        <label name="theme">Create a Thread</label>
+        <input name="theme" type="text"></input>
+        <button>Submit</button>
+      </form>
+      <div class="ui bulleted list">
+        <% data.threads.forEach(function(thread){ %>
+          <div class="item"><a href="/notes/new/<%=thread.theme%>"><%=thread.theme%></a></div>
+        <% }) %>
+      </div>
+    </div>
+    
+     <div class="ten wide centered column">
+       <div class="ui huge horizontal selection list" id="jdprofiles">
+          <% data.users.forEach(function(user){ %>
+            <div class="item jdprofiles">
+              <img class="ui avatar image" src="/images/profilepic-placeholder.png">
+              <div class="content">
+                <div class="header"><%= user.username %></div>
+              </div>
+            </div>
+          <% }) %>
+       </div>
+    
+    <!--Central Display-->
+      <h2 class="ui center aligned header">Recent Public Notes</h2>
+      <% data.notes.forEach(function(note){ %>
+        <div class="ui raised segment">
+          <h4 class="header"><%= note.kind %> from <%= note.author.username %>.</h4>
+          <p><%= note.content %></p>
+          <p class="pull-right"><%= moment(note.date).fromNow() %> <a href="/notes/reply/<%= note.author.id %>" class="ui mini button">Send one back?</a></p>
+        </div>
+      <% }) %>    
+    </div>
+  </div>
+</div>
+
+
+<% include ./partials/footer %>

@@ -8,3 +8,27 @@ body {
 .vertical.pointing.menu {
   width: 100%;
 }
+
+.jdprofiles {
+  width: 200px;
+  text-align: center;
+}
+
+#jdprofiles {
+  width: 100%;
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+
+#jdprofiles.ui.horizontal.list:not(.celled)>.item:first-child {
+    padding: .5em .5em !important;
+}
+
+.jdprofiles .avatar {
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+.jdprofiles .content {
+  padding: 0 0 0 0 !important;
+}
