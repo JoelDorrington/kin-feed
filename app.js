@@ -69,10 +69,47 @@ app.get("/hub", isLoggedIn, function(req, res){
   });
 });
 
+// ANGULAR HUB ENTRY
+app.get("/angularhub", isLoggedIn, function(req, res){
+  res.sendFile(__dirname + "/angular-hub.html");
+});
+
+// ANGULAR AJAX DATA CALLS
+app.get("/hub/notes", function(req, res){
+  User.findById(req.user._id).populate("receivedNotes").exec(function(err, user){
+    if(err){
+      console.log(err);
+    } else {
+      res.send(user.receivedNotes);
+    }
+  });
+});
+
+app.get("/user", function(req, res){
+  res.send(req.user);
+});
+
+app.get("/hub/recentactivity", function(req, res){
+  RecentActivity.findById("59c385ad74e35a2139738986").populate("notes").exec(function(err, activity){
+        if(err){
+          console.log(err);
+        } else {
+          res.send(activity);
+        }
+      });
+});
+
 app.get("/public", isLoggedIn, function(req, res){
   getPublicData(function(data){
     data.notes.reverse();
     res.render("public", {data: data, moment: moment});
+  });
+});
+
+app.get("/hub/public", isLoggedIn, function(req, res){
+  getPublicData(function(data){
+    data.notes.reverse();
+    res.send(data);
   });
 });
 
