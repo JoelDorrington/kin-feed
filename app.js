@@ -49,28 +49,25 @@ app.use(function(req, res, next){
 app.get("/", function(req, res){
   res.render("home");
 });
-app.get("/secret", isLoggedIn, function(req, res){
-  res.render("secret-page");
-});
 
-app.get("/hub", isLoggedIn, function(req, res){
-  User.findById(req.user._id).populate("receivedNotes").exec(function(err, user){
-    if(err){
-      console.log(err);
-    } else {
-      RecentActivity.findById("59c385ad74e35a2139738986").populate("notes").exec(function(err, activity){
-        if(err){
-          console.log(err);
-        } else {
-          res.render("hub", {user: user, moment: moment, activity: activity});
-        }
-      });
-    }
-  });
-});
+// app.get("/hub", isLoggedIn, function(req, res){
+//   User.findById(req.user._id).populate("receivedNotes").exec(function(err, user){
+//     if(err){
+//       console.log(err);
+//     } else {
+//       RecentActivity.findById("59c385ad74e35a2139738986").populate("notes").exec(function(err, activity){
+//         if(err){
+//           console.log(err);
+//         } else {
+//           res.render("hub", {user: user, moment: moment, activity: activity});
+//         }
+//       });
+//     }
+//   });
+// });
 
 // ANGULAR HUB ENTRY
-app.get("/angularhub", isLoggedIn, function(req, res){
+app.get("/hub", isLoggedIn, function(req, res){
   res.sendFile(__dirname + "/angular-hub.html");
 });
 

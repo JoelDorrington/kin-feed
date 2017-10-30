@@ -1,0 +1,47 @@
+      <form class="ui form" style="width: 100%">
+        <div class="field">
+          <label>Note Type</label>
+          <div class="ui selection dropdown">
+            <input type="hidden" name="note[kind]" id="kind" required>
+            <i class="dropdown icon"></i>
+            <div class="default text">Note Type</div>
+            <div class="menu">
+              <div class="item" data-value="Gratitude">Gratitude</div>
+              <div class="item" data-value="Admiration">Admiration</div>
+              <div class="item" data-value="Memory">Memory</div>
+              <div class="item" data-value="Encouragement">Encouragement</div>
+            </div>
+          </div>
+        </div>
+        <div class="inline fields">
+          <label for="pub">Public or Private?</label>
+          <div class="field">
+            <div class="ui radio checkbox">
+              <input type="radio" name="note[pub]" checked value="True" tabindex="0" class="hidden">
+              <label>Public</label>
+            </div>
+          </div>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="note[pub]" checked value="False" tabindex="0" class="hidden">
+                <label>Private</label>
+              </div>
+            </div>
+        </div>
+        <div class="field">
+          <label>Recipient</label>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="note[recipient]" required>
+              <i class="dropdown icon"></i>
+              <div class="default text">Recipient</div>
+              <div ng-click="printUsers()" class="menu">
+                  <div ng-repeat="jduser in jdscope.users" class="item" data-value="{{ jduser._id }}">{{ jduser.username }}</div>
+              </div>
+            </div>
+        </div>
+        <div class="field">
+          <label>Note</label>
+          <textarea class="" name="note[content]" lines="2" required></textarea>
+        </div>
+        <button ng-click="submitForm()" class="ui button" type="submit">Submit</button>
+      </form>
