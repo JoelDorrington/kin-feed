@@ -49,9 +49,6 @@ app.use(function(req, res, next){
 app.get("/", function(req, res){
   res.render("home");
 });
-app.get("/secret", isLoggedIn, function(req, res){
-  res.render("secret-page");
-});
 
 app.get("/hub", isLoggedIn, function(req, res){
   User.findById(req.user._id).populate("receivedNotes").exec(function(err, user){
