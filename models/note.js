@@ -19,7 +19,8 @@ var NoteSchema = new mongoose.Schema({
     },
     username: String 
   },
-  likes: Number
+  likes: Number,
+  thread: String
 });
 
 module.exports = mongoose.model("Note", NoteSchema);

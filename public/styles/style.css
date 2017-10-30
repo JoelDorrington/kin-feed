@@ -32,3 +32,8 @@ body {
 .jdprofiles .content {
   padding: 0 0 0 0 !important;
 }
+.sidemenu {
+  position: fixed;
+  left: 100px;
+  top: 100px;
+}

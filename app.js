@@ -73,6 +73,13 @@ app.get("/public", isLoggedIn, function(req, res){
   });
 });
 
+app.get("/public/:thread", isLoggedIn, function(req, res){
+  populateThread(req.params.thread, function(data){
+    data.notes.reverse();
+    res.render("public", {data: data, moment: moment});
+  });
+});
+
 // CREATE THREAD
 app.post("/public/thread/new", isLoggedIn, function(req, res){
   var newThread = {theme: req.body.theme, notes: []};
@@ -97,8 +104,8 @@ app.get("/notes/new", isLoggedIn, function(req, res){
 });
 
 app.get("/notes/new/:thread", isLoggedIn, function(req, res){
-      res.render("notes/new", {thread: req.params.thread});
-  });
+  res.render("notes/new", {thread: req.params.thread});
+});
 
 app.get("/notes/reply/:id", isLoggedIn, function(req, res){
   User.findById(req.params.id, function(err, recip){
@@ -128,12 +135,11 @@ app.post("/notes", isLoggedIn, function(req, res){
       }
     });
   } else {
-    console.log(req.body.thread);
+    newNote.thread = req.body.thread;
     Thread.find({theme: req.body.thread}, function(err, threads){
       if(err){
         console.log(err);
       } else {
-        console.log(threads);
         createNote(newNote, threads[0], res);
       }
     });
@@ -201,6 +207,40 @@ var getPublicData = function(nextFunction){
                 notes: notes,
                 users: users,
                 threads: threads
+              };
+              nextFunction(data);
+            }
+          });
+        }
+      });
+    }
+  });
+};
+
+var populateThread = function(thread, nextFunction){
+  Thread.find({"theme": thread}).populate("receivedNotes").exec(function(err, thread){
+    if(err){
+      console.log(err);
+    } else {
+      var mainThread = thread[0];
+      var notes = thread[0].receivedNotes;
+      User.find({}, function(err, users){
+        if(err){
+          console.log(err);
+        } else {
+          users.forEach(function(user){
+            user.hash = "";
+            user.salt = "";
+          });
+          Thread.find({}, function(err, threads){
+            if(err){
+              console.log(err);
+            } else {
+              var data = {
+                notes: notes,
+                users: users,
+                threads: threads,
+                mainThread: mainThread.theme
               };
               nextFunction(data);
             }
