@@ -67,8 +67,12 @@ app.get("/hub", isLoggedIn, function(req, res){
 });
 
 app.get("/public", isLoggedIn, function(req, res){
-  getPublicData(function(data){
-    data.notes.reverse();
+  var page = parseInt(req.query.page, 10);
+  if(!page){
+    page = 1;
+  }
+  getPublicData(page, function(data){
+    data.notes.docs.reverse();
     res.render("public", {data: data, moment: moment});
   });
 });
@@ -93,6 +97,12 @@ app.post("/public/thread/new", isLoggedIn, function(req, res){
 });
 
 //Note routes
+app.get("/notes/paginate", function(req, res){
+  infiniteScroll({"pub": true}, req.page, function(notes){
+    res.send(notes);
+  });
+});
+
 app.get("/notes/new", isLoggedIn, function(req, res){
   User.find({}, function(err, users){
     if(err){
@@ -117,10 +127,30 @@ app.get("/notes/reply/:id", isLoggedIn, function(req, res){
   });
 });
 
+app.get("/likes/:id", isLoggedIn, function(req, res){
+  var id = req.user._id;
+  Note.findById(req.params.id, function(err, note){
+    if(err){
+      console.log(err);
+    } else {
+      if(note.likes.users.indexOf(id) < 0){
+        note.likes.total++;
+        note.likes.users.push(id);
+      } else {
+        note.likes.total--;
+        note.likes.users.splice(note.likes.users.indexOf(id), 1);
+      }
+      note.save();
+      res.redirect("/public");
+    }
+  });
+});
+
 app.post("/notes", isLoggedIn, function(req, res){
   var newNote = req.body.note;
   if(newNote.pub === "True"){
     newNote.pub = true;
+    newNote.likes = 0;
   } else {
     newNote.pub = false;
   }
@@ -186,34 +216,30 @@ function isLoggedIn(req, res, next){
 
 // GET ALL DATA FUNCTION
 
-var getPublicData = function(nextFunction){
-  Note.find({"pub": true}, function(err, notes){
-    if(err){
-      console.log(err);
-    } else {
-      User.find({}, function(err, users){
-        if(err){
-          console.log(err);
-        } else {
-          users.forEach(function(user){
-            user.hash = "";
-            user.salt = "";
-          });
-          Thread.find({}, function(err, threads){
-            if(err){
-              console.log(err);
-            } else {
-              var data = {
-                notes: notes,
-                users: users,
-                threads: threads
-              };
-              nextFunction(data);
-            }
-          });
-        }
-      });
-    }
+var getPublicData = function(page, nextFunction){
+  infiniteScroll({"pub": true}, page, function(notes){
+    User.find({}, function(err, users){
+      if(err){
+        console.log(err);
+      } else {
+        users.forEach(function(user){
+          user.hash = "";
+          user.salt = "";
+        });
+        Thread.find({}, function(err, threads){
+          if(err){
+            console.log(err);
+          } else {
+            var data = {
+              notes: notes,
+              users: users,
+              threads: threads
+            };
+            nextFunction(data);
+          }
+        });
+      }
+    });
   });
 };
 
@@ -281,6 +307,16 @@ var createNote = function(x, model, res){
     }
   });
 };
+
+function infiniteScroll(query, page, callback){
+  Note.sort({datefield: -1}).paginate(query, {page: page, limit: 5}, function(err, notes){
+    if(err){
+      console.log(err);
+    } else {
+      callback(notes);
+    }
+  });
+}
 
 
 app.listen(process.env.PORT, process.env.IP, function(){

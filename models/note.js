@@ -1,4 +1,5 @@
 var mongoose = require("mongoose");
+var mongoosePaginate = require("mongoose-paginate");
 
 var NoteSchema = new mongoose.Schema({
   kind: String,
@@ -19,8 +20,15 @@ var NoteSchema = new mongoose.Schema({
     },
     username: String 
   },
-  likes: Number,
+  likes: {
+    total: Number,
+    users: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }]
+  },
   thread: String
 });
+NoteSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model("Note", NoteSchema);

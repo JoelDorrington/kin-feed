@@ -50,19 +50,36 @@
       <% if(data.mainThread){ %>
       <div class="ui secondary center aligned segment"><a href="/notes/new/<%=data.mainThread%>">Add your own note to this family thread!<i class="add circle icon"></i></a></div>
       <% } %>
-        <% data.notes.forEach(function(note){ %>
+      <% data.notes.docs.forEach(function(note){ %>
         <% if(note.recipient.username){var temp = "to " + note.recipient.username} else {var temp = "in " + note.thread} %>
         <div class="ui raised segment">
           <h4 class="header"><%= note.kind %> from <%= note.author.username %> <%= temp %>.</h4>
           <p><%= note.content %></p>
           <div class="pull-right"><%= moment(note.date).fromNow() %> 
             <div class="ui labeled button" tabindex="0" style="margin-left: 10px">
-            <div class="ui red button"><i class="heart icon"></i></div>
-            <a class="ui basic red left pointing label">12</a>
+            <a href="/likes/<%= note._id %>" class="ui red button"><i class="heart icon"></i></a>
+            <a class="ui basic red left pointing label"><%= note.likes.total %></a>
             </div>
           </div>
         </div>
       <% }) %>
+      <div class="ui secondary center aligned segment">
+        <% if(data.notes.page > 1){ %>
+          <a href="/public?page=<%= data.notes.page-1 %>">< </a>
+        <% } %>
+        <% for(var i = 1; i <= data.notes.pages; i ++){ %>
+          <% if(i == data.notes.page){ %>
+            <%= i %>
+          <% } else { %>
+            <a href="/public?page=<%= i %>"><%= i %></a>
+          <% } %>
+        <% } %>
+        <% if(data.notes.pages > 1 && data.notes.page < data.notes.pages){ %>
+          <a href="/public?page=<%= data.notes.page+1 %>"> ></a>
+        <% } %>
+        <% if(data.notes.page < data.notes.pages){var x = data.notes.page * 5} else { var x = (data.notes.page - 1) * 5 + data.notes.docs.length } %>
+        <span style="float: right">Showing <%= data.notes.page * 5 - 4 %>-<%= x %> of <%= data.notes.total %></span>
+      </div>
     </div>
   </div>
 </div>
