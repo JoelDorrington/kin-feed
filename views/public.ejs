@@ -12,6 +12,16 @@
         <a href="/public" class="active item">Public Notes</a>
       </div>
       <hr/>
+      <!--Search Bar-->
+      <div class="ui inverted segment">
+      <form class="ui inverted form" action="/public/search" method="GET">
+        <div class="field">
+          <label name="query">Search</label>
+          <input class="ui input" name="query" type="text"></input>
+        </div>
+        <button class="ui small blue button" style="width: 100%">Search</button>
+      </form>
+      </div>
       <!--Create a Thread Form-->
       <div class="ui inverted segment">
       <form class="ui inverted form" action="/public/thread/new" method="POST">
@@ -30,19 +40,7 @@
       </div>
     </div>
     
-    <!--user list-->
      <div class="twelve wide right floated column">
-       <div class="ui huge horizontal selection list" id="jdprofiles">
-         <!-- links to personal profiles -->
-          <% data.users.forEach(function(user){ %>
-            <div class="item jdprofiles">
-              <img class="ui avatar image" src="/images/profilepic-placeholder.png">
-              <div class="content">
-                <div class="header"><%= user.username %></div>
-              </div>
-            </div>
-          <% }) %>
-       </div>
     
     <!--Central Display-->
     <% if(data.mainThread){ var header = "Notes in the " + data.mainThread + " Thread" } else { var header = "All Public Notes" } %>
@@ -57,29 +55,36 @@
           <p><%= note.content %></p>
           <div class="pull-right"><%= moment(note.date).fromNow() %> 
             <div class="ui labeled button" tabindex="0" style="margin-left: 10px">
-            <a href="/likes/<%= note._id %>" class="ui red button"><i class="heart icon"></i></a>
+            <a href="/likes/<%= note._id %>" class="ui mini red button"><i class="heart icon"></i></a>
             <a class="ui basic red left pointing label"><%= note.likes.total %></a>
             </div>
           </div>
         </div>
       <% }) %>
+      <% if (data.notes.docs.length > 0){ %>
       <div class="ui secondary center aligned segment">
+        <% if(data.mainThread){ %>
+          <% var link = "/public/" + data.mainThread + "?page=" %>
+        <% } else { %>
+          <% var link = "/public?page=" %>
+        <% } %>
         <% if(data.notes.page > 1){ %>
-          <a href="/public?page=<%= data.notes.page-1 %>">< </a>
+          <a href="<%= link %><%= data.notes.page-1 %>">< </a>
         <% } %>
         <% for(var i = 1; i <= data.notes.pages; i ++){ %>
           <% if(i == data.notes.page){ %>
             <%= i %>
           <% } else { %>
-            <a href="/public?page=<%= i %>"><%= i %></a>
+            <a href="<%= link %><%= i %>"><%= i %></a>
           <% } %>
         <% } %>
         <% if(data.notes.pages > 1 && data.notes.page < data.notes.pages){ %>
-          <a href="/public?page=<%= data.notes.page+1 %>"> ></a>
+          <a href="<%= link %><%= data.notes.page+1 %>"> ></a>
         <% } %>
         <% if(data.notes.page < data.notes.pages){var x = data.notes.page * 5} else { var x = (data.notes.page - 1) * 5 + data.notes.docs.length } %>
         <span style="float: right">Showing <%= data.notes.page * 5 - 4 %>-<%= x %> of <%= data.notes.total %></span>
       </div>
+      <% } %>
     </div>
   </div>
 </div>

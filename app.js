@@ -4,13 +4,14 @@ var express = require("express"),
     passport = require("passport"),
     bodyParser = require("body-parser"),
     LocalStategy = require("passport-local"),
-    passportLocalMongoose = require("passport-local-mongoose"),
+    // passportLocalMongoose = require("passport-local-mongoose"),
     moment = require("moment"),
+    // textSearch = require("mongoose-text-search"),
     User = require("./models/user"),
     Note = require("./models/note"),
     Thread = require("./models/thread"),
-    RecentActivity = require("./models/recent-activity"),
-    seedDB = require("./seeds");
+    RecentActivity = require("./models/recent-activity");
+    // seedDB = require("./seeds");
 
 mongoose.connect("mongodb://localhost/family-website", {useMongoClient: true});
 mongoose.Promise = global.Promise;
@@ -77,9 +78,38 @@ app.get("/public", isLoggedIn, function(req, res){
   });
 });
 
+app.get("/public/search", isLoggedIn, function(req, res){
+  Note.textSearch(req.query.query, function(err, output){
+    if(err){
+      console.log(err);
+    } else {
+      Thread.find({}, function(err, threads){
+        if(err){
+          console.log(err);
+        } else {
+          var data = {
+            notes: {docs: output.results},
+            threads: threads
+          };
+          for(var i = 0; i < data.notes.docs.length; i++){
+            var score = data.notes.docs[i].score;
+            data.notes.docs[i] = data.notes.docs[i].obj;
+            data.notes.docs[i].score = score;
+          }
+          res.render("public", {data: data, moment: moment});
+        }
+      });
+    }
+  });
+});
+
 app.get("/public/:thread", isLoggedIn, function(req, res){
-  populateThread(req.params.thread, function(data){
-    data.notes.reverse();
+  var page = parseInt(req.query.page, 10);
+  if(!page){
+    page = 1;
+  }
+  populateThread(req.params.thread, page, function(data){
+    // data.notes.reverse();
     res.render("public", {data: data, moment: moment});
   });
 });
@@ -97,12 +127,6 @@ app.post("/public/thread/new", isLoggedIn, function(req, res){
 });
 
 //Note routes
-app.get("/notes/paginate", function(req, res){
-  infiniteScroll({"pub": true}, req.page, function(notes){
-    res.send(notes);
-  });
-});
-
 app.get("/notes/new", isLoggedIn, function(req, res){
   User.find({}, function(err, users){
     if(err){
@@ -141,7 +165,7 @@ app.get("/likes/:id", isLoggedIn, function(req, res){
         note.likes.users.splice(note.likes.users.indexOf(id), 1);
       }
       note.save();
-      res.redirect("/public");
+      res.redirect("back");
     }
   });
 });
@@ -243,13 +267,11 @@ var getPublicData = function(page, nextFunction){
   });
 };
 
-var populateThread = function(thread, nextFunction){
-  Thread.find({"theme": thread}).populate("receivedNotes").exec(function(err, thread){
+var populateThread = function(thread, page, nextFunction){
+  Note.paginate({"thread": thread, "$orderby": "-date"}, {page: page, limit: 5}, function(err, notes){
     if(err){
       console.log(err);
     } else {
-      var mainThread = thread[0];
-      var notes = thread[0].receivedNotes;
       User.find({}, function(err, users){
         if(err){
           console.log(err);
@@ -266,7 +288,7 @@ var populateThread = function(thread, nextFunction){
                 notes: notes,
                 users: users,
                 threads: threads,
-                mainThread: mainThread.theme
+                mainThread: thread
               };
               nextFunction(data);
             }
@@ -287,6 +309,7 @@ var createNote = function(x, model, res){
         note.recipient.id = model._id;
         note.recipient.username = model.username;
       }
+      note.likes = {total: 0, users: []};
       note.save();
       model.receivedNotes.unshift(note._id);
       model.save();
@@ -300,7 +323,13 @@ var createNote = function(x, model, res){
           }
           recentActivity[0].save();
           var nP;
-          note.username ? nP = "/hub" : nP = "/public/";
+          if(note.pub == false){
+            nP = "/hub";
+          } else if(note.thread){
+            nP = "/public/" + note.thread;
+          } else {
+            nP = "/public";
+          }
           res.redirect(nP);
         }
       });
@@ -309,7 +338,7 @@ var createNote = function(x, model, res){
 };
 
 function infiniteScroll(query, page, callback){
-  Note.sort({datefield: -1}).paginate(query, {page: page, limit: 5}, function(err, notes){
+  Note.paginate(query, {page: page, limit: 5, sort: 'date'}, function(err, notes){
     if(err){
       console.log(err);
     } else {
@@ -321,4 +350,4 @@ function infiniteScroll(query, page, callback){
 
 app.listen(process.env.PORT, process.env.IP, function(){
   console.log("The family site is running.");
-})
+});

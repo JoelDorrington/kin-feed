@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
 var mongoosePaginate = require("mongoose-paginate");
+var textSearch = require("mongoose-text-search");
 
 var NoteSchema = new mongoose.Schema({
   kind: String,
@@ -30,5 +31,7 @@ var NoteSchema = new mongoose.Schema({
   thread: String
 });
 NoteSchema.plugin(mongoosePaginate);
+NoteSchema.plugin(textSearch);
+NoteSchema.index({ content: 'text' });
 
 module.exports = mongoose.model("Note", NoteSchema);
