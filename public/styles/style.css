@@ -37,3 +37,19 @@ body {
   left: 100px;
   top: 100px;
 }
+
+.scroll-box {
+  max-height: 380px;
+  overflow-y: scroll;
+  padding-right: 10px;
+}
+
+.search-bar {
+  width: 300px;
+  float: right;
+}
+
+#public-header{
+  width: 600px;
+  margin-top: 0;
+}

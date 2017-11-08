@@ -12,39 +12,41 @@
         <a href="/public" class="active item">Public Notes</a>
       </div>
       <hr/>
-      <!--Search Bar-->
-      <div class="ui inverted segment">
-      <form class="ui inverted form" action="/public/search" method="GET">
-        <div class="field">
-          <label name="query">Search</label>
-          <input class="ui input" name="query" type="text"></input>
+      <div class="scroll-box">
+        <!--Create a Thread Form-->
+        <div class="ui inverted segment">
+        <form class="ui inverted form" action="/public/thread/new" method="POST">
+          <div class="field">
+            <label name="theme">Create a Thread</label>
+            <input class="ui input" name="theme" type="text"></input>
+          </div>
+          <button class="ui small blue button" style="width: 100%">Create</button>
+        </form>
         </div>
-        <button class="ui small blue button" style="width: 100%">Search</button>
-      </form>
-      </div>
-      <!--Create a Thread Form-->
-      <div class="ui inverted segment">
-      <form class="ui inverted form" action="/public/thread/new" method="POST">
-        <div class="field">
-          <label name="theme">Create a Thread</label>
-          <input class="ui input" name="theme" type="text"></input>
+        <!--Thread list-->
+        <div class="ui bulleted list">
+          <% data.threads.forEach(function(thread){ %>
+            <div class="item"><a href="/public/<%= thread.theme %>"><%= thread.theme %></a></div>
+          <% }) %>
         </div>
-        <button class="ui small blue button" style="width: 100%">Create</button>
-      </form>
-      </div>
-      <!--Thread list-->
-      <div class="ui bulleted list">
-        <% data.threads.forEach(function(thread){ %>
-          <div class="item"><a href="/public/<%= thread.theme %>"><%= thread.theme %></a></div>
-        <% }) %>
       </div>
     </div>
     
      <div class="twelve wide right floated column">
-    
+    <!--Search Bar-->
+      <div class="search-bar">
+        <form class="ui right floated form" action="/public/search" method="GET">
+          <div class="inline fields">
+             <div class="ui inline field">
+            <input class="ui input" name="query" type="text"></input>
+          </div>
+          <button class="ui blue button">Search</button>
+          </div>
+        </form>
+      </div>
     <!--Central Display-->
     <% if(data.mainThread){ var header = "Notes in the " + data.mainThread + " Thread" } else { var header = "All Public Notes" } %>
-      <h2 class="ui center aligned header"><%= header %></h2>
+      <h2 id="public-header" class="ui huge header"><%= header %></h2>
       <% if(data.mainThread){ %>
       <div class="ui secondary center aligned segment"><a href="/notes/new/<%=data.mainThread%>">Add your own note to this family thread!<i class="add circle icon"></i></a></div>
       <% } %>
@@ -55,7 +57,7 @@
           <p><%= note.content %></p>
           <div class="pull-right"><%= moment(note.date).fromNow() %> 
             <div class="ui labeled button" tabindex="0" style="margin-left: 10px">
-            <a href="/likes/<%= note._id %>" class="ui mini red button"><i class="heart icon"></i></a>
+            <a href="/notes/likes/<%= note._id %>" class="ui mini red button"><i class="heart icon"></i></a>
             <a class="ui basic red left pointing label"><%= note.likes.total %></a>
             </div>
           </div>
