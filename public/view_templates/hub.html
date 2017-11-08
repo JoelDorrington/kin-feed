@@ -1,0 +1,18 @@
+<div class="ten wide centered column">
+  <h2 class="ui center aligned header">Your Recent Notes</h2>
+  <div ng-repeat="note in data.myNotes" class="ui raised segment">
+    <h4 class="header">{{note.kind}} from {{ note.author.username }}.</h4>
+    <p>{{ note.content }}</p>
+    <p class="pull-right"> {{ moment(note.date).fromNow() }} <a href="/notes/reply/<%= note.author.id %>" class="ui mini button">Send one back?</a></p>
+  </div>
+</div>
+
+<div class="right floated six wide column">
+  <h3 class="ui center aligned header">Recent Activity</h3>
+  <div class="ui segments">
+      <div ng-repeat="action in data.activity" class="ui segment">
+        {{ note.kind }}
+        <p>{{ action.author.username }} sent {{ action.kind }} to {{ action.recipient.username }}</p>
+      </div>
+  </div>
+</div>

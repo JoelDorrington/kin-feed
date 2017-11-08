@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html ng-app="FamilyApp">
+<head>
+  <title>Relative Society</title>
+  <!--Semantic UI Link-->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css"></link>
+  <!--Custom Styles Link-->
+  <link rel="stylesheet" type="text/css" href="/styles/style.css"></link>
+</head>
+<body ng-controller="BodyCtrl">
+  <div class="ui large top fixed menu">
+  <a class="item" href="/hub"><i class="users icon"></i>Relative Society</a>
+  <div class="right menu">
+    <div class="borderless item" href= "#">
+      <img class="ui avatar image" src="/images/profilepic-placeholder.png">
+      <span>Hi, {{ currentUser.username }}!</span>
+      </div>
+    <a class="item" href="/logout">Log out</a>
+  </div>
+</div>
+<div class="ui container">
+  <div class="ui three column grid">
+    <!--Vertical Menu Bar-->
+    <div class="left floated three wide column">
+      <div class="ui secondary vertical pointing menu">
+        <a href="#/" class="active item">Home</a>
+        <a href="#/notes/new" class="item">Leave a Note</a>
+        <a href="#" class="item">Pinned Notes</a>
+        <a href="#/public" class="item">Public Notes</a>
+      </div>
+    </div>
+    <div class="thirteen wide column">
+      <div class="ui grid" ng-view>
+        <!--Main View-->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="lib/angular.min.js"></script>
+<script src="lib/angular-route.min.js"></script>
+<script src="scripts/modules.js"></script>
+<script src="scripts/angular-app.js"></script>
+<script type="text/javascript" src"/scripts/script.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js"></script>
+<script>
+  $(document).ready(function(){
+    $('.ui.selection.dropdown').dropdown();
+    $('.ui.radio.checkbox').checkbox();
+  });
+</script>
+</body>
+</html>

@@ -39,6 +39,7 @@ app.use(function(req, res, next){
   next();
 });
 
+
 // Routing
 app.use("/notes", noteRoutes);
 app.use("/public", publicRoutes);
