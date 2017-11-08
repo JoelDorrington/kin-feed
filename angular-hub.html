@@ -7,8 +7,8 @@
   <!--Custom Styles Link-->
   <link rel="stylesheet" type="text/css" href="/styles/style.css"></link>
 </head>
-<body ng-controller="BodyCtrl">
-  <div class="ui large top fixed menu">
+<body>
+  <div ng-controller="BodyCtrl" class="ui large top fixed menu">
   <a class="item" href="/hub"><i class="users icon"></i>Relative Society</a>
   <div class="right menu">
     <div class="borderless item" href= "#">
@@ -18,37 +18,45 @@
     <a class="item" href="/logout">Log out</a>
   </div>
 </div>
-<div class="ui container">
+<div class="ui container" ng-controller="PublicCtrl">
   <div class="ui three column grid">
     <!--Vertical Menu Bar-->
-    <div class="left floated three wide column">
-      <div class="ui secondary vertical pointing menu">
-        <a href="#/" class="active item">Home</a>
-        <a href="#/notes/new" class="item">Leave a Note</a>
-        <a href="#" class="item">Pinned Notes</a>
-        <a href="#/public" class="item">Public Notes</a>
-      </div>
-    </div>
+    <nav-menu class="left floated three wide column"></nav-menu>
     <div class="thirteen wide column">
-      <div class="ui grid" ng-view>
-        <!--Main View-->
+    <!--Search-->
+    <div class="search-bar">
+    <form class="ui right floated form" action="" method="">
+      <div class="inline fields">
+         <div class="ui inline field">
+        <input ng-model="publicData.query" class="ui input" type="text"></input>
+      </div>
+      <button class="ui blue button">Search</button>
+      </div>
+    </form>
+  </div>
+  <h2 class="ui center aligned header">Recent Public Notes</h2>
+  <div ng-repeat="item in publicData.publicNotes | filter:publicData.query" class="ui raised segment">
+    <h4 class="header">{{ item.kind }} from {{ item.author.username }}.</h4>
+    <p>{{ item.content }}</p>
+    <div class="pull-right">
+      Add relative time here 
+      <div class="ui labeled button" tabindex="0" style="margin-left: 10px">
+      <a href="/notes/likes/{{ item._id }}" class="ui mini red button"><i class="heart icon"></i></a>
+      <a class="ui basic red left pointing label">{{ item.likes.total }}</a>
       </div>
     </div>
   </div>
 </div>
+        <!--Main View-->
+      </div>
+    </div>
 
 <script src="lib/angular.min.js"></script>
 <script src="lib/angular-route.min.js"></script>
 <script src="scripts/modules.js"></script>
 <script src="scripts/angular-app.js"></script>
-<script type="text/javascript" src"/scripts/script.js"></script>
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script type="text/javascript" src"/scripts/script.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js"></script>
-<script>
-  $(document).ready(function(){
-    $('.ui.selection.dropdown').dropdown();
-    $('.ui.radio.checkbox').checkbox();
-  });
-</script>
 </body>
 </html>

@@ -9,6 +9,7 @@ var express = require("express"),
 // Connect Routes
 var noteRoutes = require("./routes/notes"),
     publicRoutes = require("./routes/public"),
+    ajaxRoutes = require("./routes/ajax"),
     indexRoutes = require("./routes/index");
 
 
@@ -43,6 +44,7 @@ app.use(function(req, res, next){
 // Routing
 app.use("/notes", noteRoutes);
 app.use("/public", publicRoutes);
+app.use("/ajax", ajaxRoutes);
 app.use(indexRoutes);
 
 app.listen(process.env.PORT, process.env.IP, function(){

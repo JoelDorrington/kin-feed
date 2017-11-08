@@ -6,14 +6,7 @@ var express = require("express"),
     helpers = require("../middleware/helpers");
 
 router.get("/", helpers.isLoggedIn, function(req, res){
-  var page = parseInt(req.query.page, 10);
-  if(!page){
-    page = 1;
-  }
-  helpers.getPublicData(page, function(data){
-    data.notes.docs.reverse();
-    res.render("public", {data: data, moment: moment});
-  });
+  res.sendFile("/home/ubuntu/workspace/FamilyWebsite/angular-hub.html");
 });
 
 router.get("/search", helpers.isLoggedIn, function(req, res){

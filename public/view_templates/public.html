@@ -1,16 +1,18 @@
 <div>
- <div class="ui huge horizontal selection list" id="jdprofiles">
-      <div ng-repeat="profile in publicData.users" class="item jdprofiles">
-        <img class="ui avatar image" src="/images/profilepic-placeholder.png">
-        <div class="content">
-          <div class="header">{{ profile.username }}</div>
-        </div>
+    <div class="search-bar">
+    <form class="ui right floated form" action="" method="">
+      <div class="inline fields">
+         <div class="ui inline field">
+        <input class="ui input" name="query" type="text"></input>
       </div>
- </div>
-
+      <button class="ui blue button">Search</button>
+      </div>
+    </form>
+  </div>
+  <p ng-model="publicData.publicThreads"></p>
   <h2 class="ui center aligned header">Recent Public Notes</h2>
   <div ng-repeat="item in publicData.publicNotes" class="ui raised segment">
-    <h4 class="header">{{ item.kind }} from {{ note.author.username }}.</h4>
+    <h4 class="header">{{ item.kind }} from {{ item.author.username }}.</h4>
     <p>{{ item.content }}</p>
     <p class="pull-right">{{ moment(note.date).fromNow() }} <a href="/notes/reply/{{ item.author.id }}" class="ui mini button">Send one back?</a></p>
   </div>

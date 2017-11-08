@@ -1,0 +1,23 @@
+<div class="ui secondary vertical pointing menu">
+  <a href="#/" class="item">Home</a>
+  <a href="#/notes/new" class="item">Leave a Note</a>
+  <a href="#" class="item">Pinned Notes</a>
+  <a href="#/public" class="active item">Public Notes</a>
+</div>
+<hr/>
+<div class="scroll-box">
+  <!--Create a Thread Form-->
+  <div class="ui inverted segment">
+  <form class="ui inverted form" action="/public/thread/new" method="POST">
+    <div class="field">
+      <label name="theme">Create a Thread</label>
+      <input class="ui input" name="theme" type="text"></input>
+    </div>
+    <button class="ui small blue button" style="width: 100%">Create</button>
+  </form>
+  </div>
+  <!--Thread list-->
+  <div class="ui bulleted list">
+      <div ng-repeat="thread in publicData.threads" class="item"><a href="/public/{{ thread.theme }}">{{ thread.theme }}</a></div>
+  </div>
+</div>
