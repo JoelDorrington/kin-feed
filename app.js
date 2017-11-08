@@ -268,7 +268,7 @@ var getPublicData = function(page, nextFunction){
 };
 
 var populateThread = function(thread, page, nextFunction){
-  Note.paginate({"thread": thread, "$orderby": "-date"}, {page: page, limit: 5}, function(err, notes){
+  Note.paginate({"thread": thread}, {page: page, limit: 5}, function(err, notes){
     if(err){
       console.log(err);
     } else {
@@ -338,7 +338,7 @@ var createNote = function(x, model, res){
 };
 
 function infiniteScroll(query, page, callback){
-  Note.paginate(query, {page: page, limit: 5, sort: 'date'}, function(err, notes){
+  Note.paginate({page: page, limit: 5, sort: 'date'}, function(err, notes){
     if(err){
       console.log(err);
     } else {
