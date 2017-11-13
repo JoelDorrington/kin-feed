@@ -9,6 +9,8 @@
   "author": "Joel Dorrington",
   "license": "ISC",
   "dependencies": {
+    "@angular/core": "^5.0.1",
+    "angular2-moment": "^1.7.0",
     "body-parser": "^1.18.1",
     "ejs": "^2.5.7",
     "express": "^4.15.4",
@@ -19,6 +21,8 @@
     "mongoose-text-search": "0.0.2",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "passport-local-mongoose": "^4.2.1"
+    "passport-local-mongoose": "^4.2.1",
+    "rxjs": "^5.5.2",
+    "zone.js": "^0.8.18"
   }
 }

@@ -7,7 +7,7 @@
   <!--Custom Styles Link-->
   <link rel="stylesheet" type="text/css" href="/styles/style.css"></link>
 </head>
-<body>
+<body ng-cloak>
   <div ng-controller="BodyCtrl" class="ui large top fixed menu">
   <a class="item" href="/hub"><i class="users icon"></i>Relative Society</a>
   <div class="right menu">
@@ -17,41 +17,42 @@
       </div>
     <a class="item" href="/logout">Log out</a>
   </div>
-</div>
-<div class="ui container" ng-controller="PublicCtrl">
-  <div class="ui three column grid">
-    <!--Vertical Menu Bar-->
-    <nav-menu class="left floated three wide column"></nav-menu>
-    <div class="thirteen wide column">
-    <!--Search-->
-    <div class="search-bar">
-    <form class="ui right floated form" action="" method="">
-      <div class="inline fields">
-         <div class="ui inline field">
-        <input ng-model="publicData.query" class="ui input" type="text"></input>
-      </div>
-      <button class="ui blue button">Search</button>
-      </div>
-    </form>
   </div>
-  <h2 class="ui center aligned header">Recent Public Notes</h2>
-  <div ng-repeat="item in publicData.publicNotes | filter:publicData.query" class="ui raised segment">
-    <h4 class="header">{{ item.kind }} from {{ item.author.username }}.</h4>
-    <p>{{ item.content }}</p>
-    <div class="pull-right">
-      Add relative time here 
-      <div class="ui labeled button" tabindex="0" style="margin-left: 10px">
-      <a href="/notes/likes/{{ item._id }}" class="ui mini red button"><i class="heart icon"></i></a>
-      <a class="ui basic red left pointing label">{{ item.likes.total }}</a>
+  <div class="ui container" ng-controller="PublicCtrl">
+    <div class="ui three column grid">
+      <!--Vertical Menu Bar-->
+      <nav-menu class="left floated four wide column"></nav-menu>
+      <div class="twelve wide column">
+      <!--Search-->
+        <div class="search-bar">
+        <form class="ui right floated form" action="" method="">
+          <div class="inline fields">
+             <div class="ui inline field">
+            <input ng-model="publicData.query" class="ui input" type="text"></input>
+          </div>
+          <button class="ui blue button">Search</button>
+          </div>
+        </form>
+        </div>
+        <h2 class="ui center aligned header">Recent Public Notes</h2>
+        <div ng-repeat="item in publicData.publicNotes | filter:publicData.query | orderBy: 'date':true" class="ui raised segment">
+          <h4 class="header">{{ item.kind }} from {{ item.author.username }}.</h4>
+          <p>{{ item.content }}</p>
+          <div class="pull-right">
+            <span am-time-ago="item.date"></span>
+            <div class="ui labeled button" tabindex="0" style="margin-left: 10px">
+            <a ng-click="publicData.like(item._id)" ng-class="[item.liked ? 'red' : 'unliked']" class="ui mini button"><i class="heart icon"></i></a>
+            <a ng-class="{red: item.liked}" class="ui basic left pointing label">{{ item.likes.total }}</a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
-        <!--Main View-->
-      </div>
-    </div>
 
 <script src="lib/angular.min.js"></script>
+<script src="scripts/moment-with-locales.js"></script>
+<script src="scripts/angular-moment.min.js"></script>
 <script src="lib/angular-route.min.js"></script>
 <script src="scripts/modules.js"></script>
 <script src="scripts/angular-app.js"></script>

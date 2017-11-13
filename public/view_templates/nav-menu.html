@@ -1,8 +1,8 @@
 <div class="ui secondary vertical pointing menu">
-  <a href="#/" class="item">Home</a>
-  <a href="#/notes/new" class="item">Leave a Note</a>
+  <a href="/hub" class="item">Home</a>
+  <a href="/notes/new" class="item">Leave a Note</a>
   <a href="#" class="item">Pinned Notes</a>
-  <a href="#/public" class="active item">Public Notes</a>
+  <a ng-click="publicData.viewThread('')" href="#/" class="active item">Public Notes</a>
 </div>
 <hr/>
 <div class="scroll-box">
@@ -18,6 +18,6 @@
   </div>
   <!--Thread list-->
   <div class="ui bulleted list">
-      <div ng-repeat="thread in publicData.threads" class="item"><a href="/public/{{ thread.theme }}">{{ thread.theme }}</a></div>
+      <div ng-repeat="thread in publicData.threads" ng-click="publicData.viewThread(thread.theme)" class="item"><a href="#/{{ thread.theme }}">{{ thread.theme }}</a></div>
   </div>
 </div>

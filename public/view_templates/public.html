@@ -1,19 +1,29 @@
-<div>
+<div class="ui three column grid">
+  <!--Vertical Menu Bar-->
+  <nav-menu class="left floated four wide column"></nav-menu>
+  <div class="twelve wide column">
+  <!--Search-->
     <div class="search-bar">
     <form class="ui right floated form" action="" method="">
       <div class="inline fields">
          <div class="ui inline field">
-        <input class="ui input" name="query" type="text"></input>
+        <input ng-model="publicData.query" class="ui input" type="text"></input>
       </div>
       <button class="ui blue button">Search</button>
       </div>
     </form>
-  </div>
-  <p ng-model="publicData.publicThreads"></p>
-  <h2 class="ui center aligned header">Recent Public Notes</h2>
-  <div ng-repeat="item in publicData.publicNotes" class="ui raised segment">
-    <h4 class="header">{{ item.kind }} from {{ item.author.username }}.</h4>
-    <p>{{ item.content }}</p>
-    <p class="pull-right">{{ moment(note.date).fromNow() }} <a href="/notes/reply/{{ item.author.id }}" class="ui mini button">Send one back?</a></p>
+    </div>
+    <h2 class="ui center aligned header">Recent Public Notes</h2>
+    <div ng-repeat="item in publicData.publicNotes | filter:publicData.query | orderBy: 'date':true" class="ui raised segment">
+      <h4 class="header">{{ item.kind }} from {{ item.author.username }}.</h4>
+      <p>{{ item.content }}</p>
+      <div class="pull-right">
+        <span am-time-ago="item.date"></span>
+        <div class="ui labeled button" tabindex="0" style="margin-left: 10px">
+        <a ng-click="publicData.like(item._id)" ng-class="[item.liked ? 'red' : 'unliked']" class="ui mini button"><i class="heart icon"></i></a>
+        <a ng-class="{red: item.liked}" class="ui basic left pointing label">{{ item.likes.total }}</a>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

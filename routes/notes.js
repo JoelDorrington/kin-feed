@@ -44,7 +44,7 @@ router.get("/likes/:id", helpers.isLoggedIn, function(req, res){
         note.likes.users.splice(note.likes.users.indexOf(id), 1);
       }
       note.save();
-      res.redirect("back");
+      res.send({likes: note.likes.total});
     }
   });
 });

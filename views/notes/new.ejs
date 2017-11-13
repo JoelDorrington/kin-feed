@@ -14,6 +14,9 @@
       </div>
   <!--Form-->
     <div class="right floated twelve wide column">
+      <% if(!users){ %>
+        <h1 class="ui huge header">Leave a note in the <%=thread%> thread.</h1>
+      <% } %>
       <form action="/notes" method="POST" class="ui form">
         <div class="field">
           <label>Note Type</label>
