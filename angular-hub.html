@@ -18,46 +18,17 @@
     <a class="item" href="/logout">Log out</a>
   </div>
   </div>
-  <div class="ui container" ng-controller="PublicCtrl">
-    <div class="ui three column grid">
-      <!--Vertical Menu Bar-->
-      <nav-menu class="left floated four wide column"></nav-menu>
-      <div class="twelve wide column">
-      <!--Search-->
-        <div class="search-bar">
-        <form class="ui right floated form" action="" method="">
-          <div class="inline fields">
-             <div class="ui inline field">
-            <input ng-model="publicData.query" class="ui input" type="text"></input>
-          </div>
-          <button class="ui blue button">Search</button>
-          </div>
-        </form>
-        </div>
-        <h2 class="ui center aligned header">Recent Public Notes</h2>
-        <div ng-repeat="item in publicData.publicNotes | filter:publicData.query | orderBy: 'date':true" class="ui raised segment">
-          <h4 class="header">{{ item.kind }} from {{ item.author.username }}.</h4>
-          <p>{{ item.content }}</p>
-          <div class="pull-right">
-            <span am-time-ago="item.date"></span>
-            <div class="ui labeled button" tabindex="0" style="margin-left: 10px">
-            <a ng-click="publicData.like(item._id)" ng-class="[item.liked ? 'red' : 'unliked']" class="ui mini button"><i class="heart icon"></i></a>
-            <a ng-class="{red: item.liked}" class="ui basic left pointing label">{{ item.likes.total }}</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="ui container" ng-view></div>
 
 <script src="lib/angular.min.js"></script>
 <script src="scripts/moment-with-locales.js"></script>
 <script src="scripts/angular-moment.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-animate.js"></script>
 <script src="lib/angular-route.min.js"></script>
-<script src="scripts/modules.js"></script>
+<script src="scripts/publicModule.js"></script>
+<script src="scripts/pinnedModule.js"></script>
 <script src="scripts/angular-app.js"></script>
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-<script type="text/javascript" src"/scripts/script.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js"></script>
 </body>
 </html>

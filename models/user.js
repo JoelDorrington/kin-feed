@@ -9,7 +9,14 @@ var UserSchema = new mongoose.Schema({
   receivedNotes: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Note"
-    }]
+    }],
+  pinnedNoteGroups: [{
+    groupName: String,
+    notes: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Note"
+    }],
+  }]
 });
 
 UserSchema.plugin(passportLocalMongoose);

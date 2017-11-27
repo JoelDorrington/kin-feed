@@ -17,6 +17,7 @@ var noteRoutes = require("./routes/notes"),
 mongoose.connect("mongodb://localhost/family-website", {useMongoClient: true});
 mongoose.Promise = global.Promise;
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 

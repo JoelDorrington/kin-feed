@@ -100,9 +100,9 @@ helpers.createNote = function(x, model, res){
           if(note.pub == false){
             nP = "/hub";
           } else if(note.thread){
-            nP = "/public#/" + note.thread;
+            nP = "view#/thread/" + note.thread;
           } else {
-            nP = "/public";
+            nP = "view#/public";
           }
           res.redirect(nP);
         }

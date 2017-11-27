@@ -16,9 +16,10 @@
       </div>
     </form>
     </div>
-    <h2 class="ui center aligned header">Recent Public Notes</h2>
-    <div ng-repeat="item in publicData.publicNotes | filter:publicData.query | orderBy: 'date':true" class="ui raised segment">
-      <h4 class="header">{{ item.kind }} from {{ item.author.username }} {{publicData.recipOrThread(item)}}.</h4>
+    <h2 class="ui center aligned header">{{publicData.thread}}</h2>
+    <div class="ui secondary center aligned segment"><a href="/notes/new/{{publicData.thread}}">Add your own note to this family thread!<i class="add circle icon"></i></a></div>
+    <div ng-repeat="item in publicData.publicNotes | filter:item.thread == publicData.thread | orderBy: 'date':true" class="ui raised segment">
+      <h4 class="header">{{ item.kind }} from {{ item.author.username }}.</h4>
       <p>{{ item.content }}</p>
         <span am-time-ago="item.date"></span>
         <div style="position: relative; width: 161px; left: 650px; overflow: visible;" class="pull-right">

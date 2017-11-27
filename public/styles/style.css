@@ -63,3 +63,12 @@ a.ui.mini.button.unliked {
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
 }
+
+button.ng-hide {
+  opacity: 0;
+}
+
+.jdblue {
+  background-color: #2185d0 !important;
+  color: white;
+}

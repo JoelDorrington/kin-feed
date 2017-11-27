@@ -29,6 +29,43 @@ router.get("/hub", helpers.isLoggedIn, function(req, res){
   });
 });
 
+router.get("/view", helpers.isLoggedIn, function(req, res){
+  res.sendFile("/home/ubuntu/workspace/FamilyWebsite/angular-hub.html");
+});
+
+router.get("/pinned", helpers.isLoggedIn, function(req, res){
+  res.sendFile("/home/ubuntu/workspace/FamilyWebsite/angular-pins.html");
+});
+
+router.post("/pin", helpers.isLoggedIn, function(req, res){
+  var id = req.body.id;
+  User.findById(req.user._id, function(err, user){
+    if(req.body.action){
+      var foundGroup = false;
+      user.pinnedNoteGroups.forEach(function(group){
+        if(group.groupName == req.body.groupName){
+          group.notes.push(id);
+          foundGroup = true;
+        }
+      });
+      if(!foundGroup){
+        user.pinnedNoteGroups.push({groupName: req.body.groupName, notes: [id]});
+      }
+    } else {
+      user.pinnedNoteGroups.forEach(function(group, index){
+        if(group.notes.indexOf(String(id)) > -1){
+          group.notes.splice(group.notes.indexOf(String(id), 1));
+        }
+        if(group.notes.length < 1){
+          user.pinnedNoteGroups.splice(index, 1);
+        }
+      });
+    }
+    user.save();
+    res.send(user.pinnedNoteGroups);
+  });
+});
+
 // Register
 router.get("/register", function(req, res){
   res.render("register");
