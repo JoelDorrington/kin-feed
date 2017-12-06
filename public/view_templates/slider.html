@@ -1,0 +1,12 @@
+<div class="slideshow-container">
+  <div ng-repeat="image in $ctrl.images" class="{{$ctrl.id}}Slide mySlides fade">
+    <div class="numbertext">{{$index + 1}} / {{$ctrl.images.length}}</div>
+    <img class="jdimage" src="{{image}}">
+  </div>
+  <a class="prev" ng-click="plusSlides(-1)">&#10094;</a>
+  <a class="next" ng-click="plusSlides(1)">&#10095;</a>
+</div>
+<br>
+<div style="text-align: center;">
+  <div ng-repeat="image in $ctrl.images" class="{{$ctrl.id}}Dot dot" ng-click="currentSlide($index)"></div>
+</div>

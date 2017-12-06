@@ -2,9 +2,11 @@
 
 <h1>Sign up to leave encouraging comments for the family</h1>
 
-<form action="/register" method="POST">
+<form action="/register" enctype="multipart/form-data" method="POST">
   <input type="text" placeholder="Name" name="username"></input>
+  <input type="email" placeholder="Email" name="email"></input>
   <input type="password" placeholder="Password" name="password"></input>
+  <input type="file" name="avatar">
   <button>Sign up</button>
 </form>
 

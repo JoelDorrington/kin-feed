@@ -1,6 +1,16 @@
 var express = require("express"),
     router = express.Router({mergeParams: true}),
     moment = require("moment"),
+    multer = require('multer'),
+    storage = multer.diskStorage({
+      destination: function(req, file, cb){
+        cb(null, 'public/uploads');
+      },
+      filename: function(req, file, cb){
+        cb(null, Date.now() + '-' + file.originalname);
+      }
+    }),
+    upload = multer({storage: storage}),
     User = require("../models/user"),
     RecentActivity = require("../models/recent-activity"),
     passport = require("passport"),
@@ -71,16 +81,49 @@ router.get("/register", function(req, res){
   res.render("register");
 });
 
-router.post("/register", function(req, res){
-  User.register(new User({username: req.body.username}), req.body.password, function(err, user){
+router.post("/register", upload.single('avatar'), function(req, res){
+  var ext = req.file.mimetype.slice(req.file.mimetype.indexOf('/')+1);
+  helpers.processAvatar(req.file.path, req.body.username, ext, function(path){
+      User.register(new User({username: req.body.username, email: req.body.email, avatar: path}), req.body.password, function(err, user){
+        if(err){
+          console.log(err);
+        } else {
+          passport.authenticate("local")(req, res, function(){
+            res.redirect("/hub");
+          });
+        }
+      });
+  });
+});
+
+// Change Avatar
+router.get('/profile', helpers.isLoggedIn, function(req, res){
+  res.render('profile');
+});
+
+router.post('/profile', helpers.isLoggedIn, upload.single('avatar'), function(req, res){
+  var ext = req.file.mimetype.slice(req.file.mimetype.indexOf('/')+1);
+  helpers.processAvatar(req.file.path, req.user.username, ext, function(path){
+      User.findByIdAndUpdate(req.user._id, {$set: {avatar: path}}, function(err, user){
+        if(err){
+          console.log(err);
+        } else {
+          res.redirect("/hub");
+        }
+      });
+  });
+});
+
+router.get("/deleteavatar", helpers.isLoggedIn, function(req, res){
+  helpers.deleteAvatar(req.user.avatar);
+  User.findByIdAndUpdate(req.user._id, {$set: {avatar: "/uploads/profilepic-placeholder.png"}}, function(err, user){
     if(err){
       console.log(err);
     } else {
-      passport.authenticate("local")(req, res, function(){
-        res.redirect("/hub");
-      });
+      res.redirect("/hub");
     }
   });
+  
 });
 
 // Login/Logout

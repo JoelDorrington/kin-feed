@@ -19,6 +19,8 @@
       <div ng-repeat="item in group.notes | filter:publicData.query | orderBy: 'date':true" class="ui raised segment">
         <h4 class="header">{{ item.kind }} from {{ item.author.username }}.</h4>
         <p>{{ item.content }}</p>
+        <img ng-if="item.image.length == 1" class="ui medium centered rounded image" src="{{item.image[0]}}">
+        <jd-slider id="{{item._id}}" ng-if="item.image.length > 1" images="item.image"></jd-slider>
         <span am-time-ago="item.date"></span>
         <div style="position: relative; width: 161px; left: 650px; overflow: visible;" class="pull-right">
         <div style="width: 102px;">

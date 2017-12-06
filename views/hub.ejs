@@ -17,6 +17,9 @@
         <div class="ui raised segment">
           <h4 class="header"><%= note.kind %> from <%= note.author.username %>.</h4>
           <p><%= note.content %></p>
+          <% if(note.image){ %>
+          <img style="margin: 10px auto;" class="ui medium rounded image" src="<%= note.image %>">
+          <% } %>
           <p class="pull-right"><%= moment(note.date).fromNow() %> <a href="/notes/reply/<%= note.author.id %>" class="ui mini button">Send one back?</a></p>
         </div>
       <% }) %>    

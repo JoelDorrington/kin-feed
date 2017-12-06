@@ -28,7 +28,8 @@ var NoteSchema = new mongoose.Schema({
       ref: "User"
     }]
   },
-  thread: String
+  thread: String,
+  image: [String]
 });
 NoteSchema.plugin(mongoosePaginate);
 NoteSchema.plugin(textSearch);

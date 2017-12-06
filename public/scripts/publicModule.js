@@ -1,4 +1,4 @@
-angular.module("Hub", ['angularMoment'])
+angular.module("Hub", ['angularMoment', 'Slider'])
 
 .controller("BodyCtrl", ["$scope", "DataService", function($scope, DataService){
   $scope.currentUser = DataService.user;
@@ -8,7 +8,7 @@ angular.module("Hub", ['angularMoment'])
 }])
 
 // PUBLIC CONTROLLER
-.controller("PublicCtrl", ["$scope", "DataService", 'moment', '$routeParams', function($scope, DataService, moment, $routeParams){
+.controller("PublicCtrl", ["$scope", "DataService", 'moment', '$routeParams', "$location", function($scope, DataService, moment, $routeParams, $location){
   $scope.publicData = {};
   $scope.publicData.thread = $routeParams.thread;
   $scope.publicData.newGroup = '';
@@ -85,8 +85,6 @@ angular.module("Hub", ['angularMoment'])
   $scope.publicData.pin = function(entry, groupName){
     entry.menustay = false;
     entry.menu = false;
-    console.log("run");
-    console.log(groupName);
     if(entry.pinned){
       DataService.pin(false, entry._id, groupName);
       entry.pinned = false;
@@ -97,6 +95,14 @@ angular.module("Hub", ['angularMoment'])
       entry.group = groupName;
     }
     $scope.publicData.newGroup = '';
+  };
+  $scope.refreshPub = function(){
+    DataService.refreshPub();
+    console.log("refreshed pub from pub")
+  };
+  $scope.refreshPin = function(){
+    DataService.refreshPin();
+    console.log("refreshed pin from pub")
   };
 }])
 
@@ -109,6 +115,45 @@ angular.module("Hub", ['angularMoment'])
   dataService.like = function(id){
     $http.get("/notes/likes/" + id).then(function(response){
       dataService.likes = response.data.likes;
+    });
+  };
+  
+  dataService.refreshPub = function(){
+    $http.get("/ajax/user").then(function(response){
+      dataService.user = response.data;
+      dataService.groups = response.data.pinnedNoteGroups;
+      dataService.userfound = true;
+      // Fetch Notes
+      $http.get("/ajax/notes").then(function(response){
+        dataService.publicNotes = response.data;
+      }).catch(function(error){
+        console.log(error);
+      });
+    }).catch(function(error){
+      console.log(error);
+    });
+    $http.get("/ajax/threads").then(function(response){
+      dataService.threads = response.data;
+    }).catch(function(error){
+      console.log(error);
+    });
+  };
+  
+  dataService.refreshPin = function(){
+    $http.get("/ajax/pinneduser").then(function(response){
+      dataService.pinnedNoteGroups = response.data.pinnedNoteGroups;
+    }).catch(function(error){
+      console.log(error);
+    });
+  };
+  
+  dataService.unpin = function(id){
+    var data = {
+      action: false,
+      id: id
+    };
+    $http.post("/pin", data).then(function(response){
+      dataService.pinnedNoteGroups = response.data;
     });
   };
   
@@ -133,7 +178,6 @@ angular.module("Hub", ['angularMoment'])
       }
     });
   };
-  
   // Fetch Current User
     $http.get("/ajax/user").then(function(response){
       dataService.user = response.data;
@@ -147,6 +191,11 @@ angular.module("Hub", ['angularMoment'])
       });
     }).catch(function(error){
       console.log(error);
+    });
+    
+    $http.get("/ajax/pinneduser").then(function(response){
+      dataService.user = response.data;
+      dataService.pinnedNoteGroups = response.data.pinnedNoteGroups;
     });
     
     $http.get("/ajax/threads").then(function(response){

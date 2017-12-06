@@ -1,0 +1,29 @@
+<% include ./partials/header %>
+
+<div class="ui container">
+  <div class="ui three column grid">
+   <!--Vertical Menu Bar-->
+      <div class="left floated four wide column">
+        <div class="ui secondary vertical pointing menu">
+          <a class="item" href="/hub">Home</a>
+          <a class="active item" href="#">Leave a Note</a>
+          <a class="item" href="/view#/pinned">Pinned Notes</a>
+          <a class="item" href="/view#/public">Public Notes</a>
+        </div>
+      </div>
+  <!--Form-->
+    <div class="right floated twelve wide column">
+      <h1 class="ui huge header">Change your profile picture.</h1>
+      <form action="/profile" method="POST" enctype="multipart/form-data" class="ui form">
+        <div class="field">
+          <label>Image</label>
+          <input type="file" name="avatar"></input>
+        </div>
+        <button class="ui button" type="submit">Submit</button>
+      </form>
+      <a href="/deleteavatar"><button class="ui red button">Delete Avatar</button></a>
+    </div>
+  </div>
+</div>
+
+<% include ./partials/footer %>

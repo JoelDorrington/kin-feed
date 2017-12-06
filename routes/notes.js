@@ -1,5 +1,15 @@
 var express = require("express"),
     router = express.Router({mergeParams: true}),
+    multer = require('multer'),
+    storage = multer.diskStorage({
+      destination: function(req, file, cb){
+        cb(null, 'public/uploads');
+      },
+      filename: function(req, file, cb){
+        cb(null, Date.now() + '-' + file.originalname);
+      }
+    }),
+    upload = multer({storage: storage}),
     User = require("../models/user"),
     Note = require("../models/note"),
     Thread = require("../models/thread"),
@@ -49,8 +59,15 @@ router.get("/likes/:id", helpers.isLoggedIn, function(req, res){
   });
 });
 
-router.post("/", helpers.isLoggedIn, function(req, res){
+router.post("/", helpers.isLoggedIn, upload.array('photo'), function(req, res){
   var newNote = req.body.note;
+  if(req.files){
+    newNote.image = [];
+    req.files.forEach(function(file){
+      helpers.processPhoto(file.path, file.filename, function(image){});
+      newNote.image.push('/uploads/sm' + file.filename);
+    });
+  }
   if(newNote.pub === "True"){
     newNote.pub = true;
     newNote.likes = 0;

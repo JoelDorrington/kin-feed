@@ -20,7 +20,9 @@
     <div ng-repeat="item in publicData.publicNotes | filter:publicData.query | orderBy: 'date':true" class="ui raised segment">
       <h4 class="header">{{ item.kind }} from {{ item.author.username }} {{publicData.recipOrThread(item)}}.</h4>
       <p>{{ item.content }}</p>
-        <span am-time-ago="item.date"></span>
+      <img ng-if="item.image.length == 1" class="ui medium centered rounded image" src="{{item.image[0]}}">
+      <jd-slider id="{{item._id}}" ng-if="item.image.length > 1" images="item.image"></jd-slider>
+        <span style="position: absolute; top: 15px; right: 15px;" am-time-ago="item.date"></span>
         <div style="position: relative; width: 161px; left: 650px; overflow: visible;" class="pull-right">
         <div style="width: 102px;">
         <div style="float: left;" ng-mouseover="item.menu = true" ng-mouseleave="item.menu = false" ng-class="item.pinned ? 'blue' : ''" class="pin-button ui small vertical animated button" tabindex="0">
@@ -29,7 +31,7 @@
             <i class="pin icon"></i>
           </div>
         </div>
-          <div ng-show="item.menu"  ng-mouseover="item.menu = true" ng-mouseleave="item.menustay == false ? item.menu = false : ''" class="ui raised compact segments" style="min-width: 150px; height: 200px; overflow: auto; position:absolute; left: 29px; top: 18px; transform: translateX(-50%); z-index: 100;">
+          <div ng-show="item.menu"  ng-mouseover="item.menu = true" ng-mouseleave="item.menustay == false ? item.menu = false : ''" class="ui raised compact segments" style="min-width: 150px; max-height: 200px; overflow: auto; position:absolute; left: 29px; top: 18px; transform: translateX(-50%); z-index: 100;">
             <div ng-repeat="group in publicData.groups"  ng-click="publicData.pin(item, group.groupName)" ng-class="group.groupName == item.group ? 'jdblue' : ''" class="ui center aligned segment">
               <p>{{group.groupName}}</p>
             </div>

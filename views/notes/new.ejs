@@ -17,7 +17,7 @@
       <% if(!users){ %>
         <h1 class="ui huge header">Leave a note in the <%=thread%> thread.</h1>
       <% } %>
-      <form action="/notes" method="POST" class="ui form">
+      <form action="/notes" method="POST" enctype="multipart/form-data" class="ui form">
         <div class="field">
           <label>Note Type</label>
           <div class="ui selection dropdown">
@@ -67,6 +67,10 @@
           <% } else { %>
             <input name="thread" value="<%= thread %>" class="ui disabled input">
           <% } %>
+        </div>
+        <div class="field">
+          <label>Image</label>
+          <input type="file" name="photo" multiple></input>
         </div>
         <div class="field">
           <label>Note</label>

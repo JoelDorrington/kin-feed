@@ -6,6 +6,7 @@ var UserSchema = new mongoose.Schema({
   username: String,
   password: String,
   email: String,
+  avatar: String,
   receivedNotes: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Note"

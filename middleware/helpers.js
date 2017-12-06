@@ -1,5 +1,7 @@
 var helpers = {},
   moment = require("moment"),
+  sharp = require("sharp"),
+  fs = require('fs'),
   Note = require("../models/note"),
   User = require("../models/user"),
   Thread = require("../models/thread"),
@@ -73,20 +75,20 @@ helpers.populateThread = function(thread, page, nextFunction){
   });
 };
 
-helpers.createNote = function(x, model, res){
+helpers.createNote = function(x, destination, res){
     Note.create(x, function(err, note){
     if(err){
       console.log(err);
     } else {
       note.date = moment();
-      if(model.username){
-        note.recipient.id = model._id;
-        note.recipient.username = model.username;
+      if(destination.username){
+        note.recipient.id = destination._id;
+        note.recipient.username = destination.username;
       }
       note.likes = {total: 0, users: []};
       note.save();
-      model.receivedNotes.unshift(note._id);
-      model.save();
+      destination.receivedNotes.unshift(note._id);
+      destination.save();
       RecentActivity.find({}, function(err, recentActivity){
         if(err){
           console.log(err);
@@ -105,6 +107,47 @@ helpers.createNote = function(x, model, res){
             nP = "view#/public";
           }
           res.redirect(nP);
+        }
+      });
+    }
+  });
+};
+
+helpers.processAvatar = function(image, username, ext, cb){
+  var path = 'public/uploads/'+username+'-avatar.'+ext;
+  var avatar = 'uploads/'+username+'-avatar.'+ext;
+  sharp(image).resize(100, 100).toFile(path, function(err, info){
+    if(err){
+      console.log(err);
+    } else {
+      fs.unlink(image, function(err){
+        if(err){
+          console.log(err);
+        }else{
+          cb(avatar);
+        }
+      });
+    }
+  });
+};
+
+helpers.deleteAvatar = function(imagePath){
+  var image = 'public/' + imagePath; 
+  if(imagePath !== "/uploads/profilepic-placeholder.png"){
+    fs.unlink(image, function(err){if(err){console.log(err)}});
+  }
+};
+
+helpers.processPhoto = function(image, filename, cb){
+  sharp(image).resize(400).toFile('public/uploads/sm'+filename, function(err, info){
+    if(err){
+      console.log(err);
+    } else {
+      fs.unlink(image, function(err){
+        if(err){
+          console.log(err);
+        }else{
+          cb('uploads/sm'+filename);
         }
       });
     }
