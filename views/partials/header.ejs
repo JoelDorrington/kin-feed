@@ -23,3 +23,14 @@
     <% } %>
   </div>
 </div>
+
+<% if(error && error.length > 0){ %>
+  <div class="ui container">
+    <div class="ui negative message" role"alert"><%= error %></div>
+  </div>
+<% } %>
+<% if(success && success.length > 0){ %>
+  <div class="ui container">
+    <div class="alert alert-success" role"alert"><%= success %></div>
+  </div>
+<% } %>

@@ -1,5 +1,6 @@
 var express = require("express"),
     app = express(),
+    flash = require("connect-flash"),
     mongoose = require("mongoose"),
     passport = require("passport"),
     bodyParser = require("body-parser"),
@@ -28,6 +29,7 @@ app.use(require("express-session")({
   saveUninitialized: false
 }));
 
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStategy(User.authenticate()));
@@ -38,6 +40,8 @@ passport.deserializeUser(User.deserializeUser());
 // Global Resources
 app.use(function(req, res, next){
   res.locals.currentUser = req.user;
+  res.locals.error = req.flash("error");
+  res.locals.success = req.flash("success");
   next();
 });
 

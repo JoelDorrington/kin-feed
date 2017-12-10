@@ -11,10 +11,12 @@
   <div ng-controller="BodyCtrl" class="ui large top fixed menu">
   <a class="item" href="/hub"><i class="users icon"></i>Relative Society</a>
   <div class="right menu">
-    <div class="borderless item" href= "/profile">
-      <img class="ui avatar image" src="{{currentUser.avatar}}">
-      <span>Hi, {{ currentUser.username }}!</span>
+    <a href= "/profile">
+      <div class="borderless item">
+        <img class="ui avatar image" src="{{currentUser.avatar}}">
+        <p>Hi, {{ currentUser.username }}!</p>
       </div>
+    </a>
     <a class="item" href="/logout">Log out</a>
   </div>
   </div>
