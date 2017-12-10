@@ -1,6 +1,8 @@
 <div class="ui three column grid">
   <!--Vertical Menu Bar-->
-  <nav-menu class="left floated four wide column"></nav-menu>
+  <div class="left floated four wide column" >
+    <nav-menu style="position: fixed; width: 261px;"></nav-menu>
+  </div>
   <div class="twelve wide column">
   <!--Search-->
     <div class="search-bar">
@@ -21,8 +23,8 @@
         <p>{{ item.content }}</p>
         <img ng-if="item.image.length == 1" class="ui medium centered rounded image" src="{{item.image[0]}}">
         <jd-slider id="{{item._id}}" ng-if="item.image.length > 1" images="item.image"></jd-slider>
-        <span am-time-ago="item.date"></span>
-        <div style="position: relative; width: 161px; left: 650px; overflow: visible;" class="pull-right">
+        <span style="position: absolute; top: 15px; right: 20px;" am-time-ago="item.date"></span>
+        <div class="pull-right button-cluster">
         <div style="width: 102px;">
           <div ng-click="pinnedData.unpin(item._id)" style="float: left;" class="pin-button blue ui small vertical animated button" tabindex="0">
             <div class="hidden content">Unpin</div>

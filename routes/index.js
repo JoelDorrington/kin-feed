@@ -89,7 +89,7 @@ router.post("/register", upload.single('avatar'), function(req, res){
           console.log(err);
         } else {
           passport.authenticate("local")(req, res, function(){
-            res.redirect("/hub");
+            res.redirect("/view#/home");
           });
         }
       });
@@ -120,7 +120,7 @@ router.get("/deleteavatar", helpers.isLoggedIn, function(req, res){
     if(err){
       console.log(err);
     } else {
-      res.redirect("/hub");
+      res.redirect("/view#/home");
     }
   });
   
@@ -131,7 +131,7 @@ router.get("/login", function(req, res){
   res.render("login");
 });
 router.post("/login", passport.authenticate("local", {
-  successRedirect: "/hub",
+  successRedirect: "/view#/home",
   failureRedirect: "/login"
 }), function(req, res){
 });

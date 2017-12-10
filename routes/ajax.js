@@ -19,7 +19,7 @@ router.get("/user", function(req, res){
 });
 
 router.get("/pinneduser", function(req, res){
-  User.findById(req.user._id).populate('pinnedNoteGroups.notes').exec(function(err, user){
+  User.findById(req.user._id).populate('pinnedNoteGroups.notes').populate('receivedNotes').exec(function(err, user){
     if(err){
       console.log(err);
     } else {
