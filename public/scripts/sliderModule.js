@@ -6,7 +6,7 @@ angular.module("Slider", [])
     $scope.id = this.id;
     
     $scope.slideIndex = 1;
-    setTimeout(function(){console.log("showSlide executed"); $scope.showSlides($scope.slideIndex)}, 1000);
+    setTimeout(function(){$scope.showSlides($scope.slideIndex)}, 1000);
     
     $scope.plusSlides = function(n) {
       $scope.showSlides($scope.slideIndex += n);

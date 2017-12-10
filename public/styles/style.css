@@ -1,6 +1,79 @@
 body {
   padding-top: 100px;
+  background-color: #EFFFFF;
 }
+
+div.ui.large.top.fixed.menu {
+  background-color: #8C684E;
+}
+
+#create-a-thread {
+  background-color: #6C503E
+}
+
+.ui.blue.button {
+  background-color: #2D8DB2 !important;
+}
+
+a {
+  color: #2D8DB2;
+}
+
+h2.ui.header {
+  font-family: 'courgette', cursive;
+  font-size: 2em;
+}
+
+a.item, label {
+  font-family: 'philosopher', sans-serif;
+  font-size: 1.1em !important;
+}
+
+#pub-priv {
+  width: 320px;
+  padding: 3px;
+  background-color: #FFFFFF;
+  border-radius: 2px;
+}
+
+.pull-right.button-cluster {
+  position: relative;
+  width: 161px;
+  left: 80%;
+  overflow: visible;
+}
+
+@media screen and (max-width: 500px){
+  .pull-right.button-cluster {
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 10px;
+  }
+}
+@media screen and (min-width: 501px){
+  .slideshow-container{
+    max-width: 400px;
+  }
+}
+
+label {
+  font-weight: 700;
+}
+
+#logo {
+  font-family: 'courgette', cursive;
+  font-size: 1.3em;
+}
+
+h2.ui.medium.header {
+  text-decoration: underline black;
+}
+
+h4 {
+  font-family: 'philosopher', sans-serif;
+  font-size: 1.3em;
+}
+
 .pull-right{
   text-align: right;
 }
@@ -72,11 +145,11 @@ button.ng-hide {
   background-color: #2185d0 !important;
   color: white;
 }
+
 /*SlideShow CSS*/
 * {box-sizing: border-box}
 
 .slideshow-container {
-  max-width: 400px;
   position: relative;
   margin: auto;
 }
@@ -86,7 +159,7 @@ button.ng-hide {
 }
 
 .jdimage {
-  max-width: 400px;
+  max-width: 100%;
   border-radius: .3125em;
 }
 

@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html ng-app="FamilyApp">
 <head>
-  <title>Relative Society</title>
+  <title>KinFeed</title>
+  <!--Google Fonts-->
+  <link href="https://fonts.googleapis.com/css?family=Courgette|Philosopher" rel="stylesheet">
   <!--Semantic UI Link-->
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css"></link>
   <!--Custom Styles Link-->
   <link rel="stylesheet" type="text/css" href="styles/style.css"></link>
 </head>
 <body ng-cloak>
-  <div ng-controller="BodyCtrl" class="ui large top fixed menu">
-  <a class="item" href="/hub"><i class="users icon"></i>Relative Society</a>
+  <div ng-controller="BodyCtrl" class="ui large top fixed inverted menu">
+  <a id="logo" class="item" href="/view#/home"><i class="users icon"></i>KinFeed</a>
   <div class="right menu">
-    <a href= "/profile">
-      <div class="borderless item">
-        <img class="ui avatar image" src="{{currentUser.avatar}}">
-        <p>Hi, {{ currentUser.username }}!</p>
-      </div>
+    <a href="/profile">
+    <div class="borderless item" href= "/profile">
+      <img class="ui avatar image" src="{{currentUser.avatar}}">
+      <span>Hi, {{ currentUser.username }}!</span>
+    </div>
     </a>
     <a class="item" href="/logout">Log out</a>
   </div>
@@ -29,6 +31,7 @@
 <script src="lib/angular-route.min.js"></script>
 <script src="scripts/publicModule.js"></script>
 <script src="scripts/pinnedModule.js"></script>
+<script src="scripts/homeModule.js"></script>
 <script type="text/javascript" src="scripts/sliderModule.js"></script>
 <script src="scripts/angular-app.js"></script>
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>

@@ -1,8 +1,8 @@
 <div class="ui three column grid">
   <!--Vertical Menu Bar-->
   <div class="left floated four wide column">
-  <nav-menu></nav-menu>
-  <threads></threads>
+  <nav-menu style="position: fixed; width: 261px;"></nav-menu>
+  <threads style="position: fixed; top: 270px; width: 261px;"></threads>
   </div>
   <div class="twelve wide column">
   <!--Search-->
@@ -21,8 +21,10 @@
     <div ng-repeat="item in publicData.publicNotes | filter:item.thread == publicData.thread | orderBy: 'date':true" class="ui raised segment">
       <h4 class="header">{{ item.kind }} from {{ item.author.username }}.</h4>
       <p>{{ item.content }}</p>
-        <span am-time-ago="item.date"></span>
-        <div style="position: relative; width: 161px; left: 650px; overflow: visible;" class="pull-right">
+      <img ng-if="item.image.length == 1" class="ui medium centered rounded image" src="{{item.image[0]}}">
+      <jd-slider id="{{item._id}}" ng-if="item.image.length > 1" images="item.image"></jd-slider>
+      <span style="position: absolute; top: 15px; right: 15px;" am-time-ago="item.date"></span>
+      <div style="position: relative; width: 161px; left: 650px; overflow: visible;" class="pull-right">
         <div style="width: 102px;">
         <div style="float: left;" ng-mouseover="item.menu = true" ng-mouseleave="item.menu = false" ng-class="item.pinned ? 'blue' : ''" class="pin-button ui small vertical animated button" tabindex="0">
           <div class="hidden content">Pin</div>

@@ -1,6 +1,6 @@
 <div class="ui secondary vertical pointing menu">
-  <a href="/hub" class="item">Home</a>
-  <a href="/notes/new" class="item">Leave a Note</a>
-  <a href="#/pinned" ng-class="pinnedData ? 'active' : ''" class="item" ng-click="refreshPin()">Pinned Notes</a>
-  <a href="#/public" ng-class="publicData ? 'active' : ''" class="item" ng-click="refreshPub()">Public Notes</a>
+  <a href="#/home" ng-class="homeData ? 'active' : ''" class="item" ng-click="refreshHome()">Home</a>
+  <a href="/notes/new" class="item">Make a Post</a>
+  <a href="#/pinned" ng-class="pinnedData ? 'active' : ''" class="item" ng-click="refreshPin()">Pinned Posts</a>
+  <a href="#/public" ng-class="publicData ? 'active' : ''" class="item" ng-click="refreshPub()">Public Posts</a>
 </div>

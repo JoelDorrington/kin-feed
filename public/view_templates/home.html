@@ -1,0 +1,54 @@
+<div class="ui three column grid">
+  <!--Vertical Menu Bar-->
+  <div class="left floated four wide column" >
+    <nav-menu style="position: fixed; width: 261px;"></nav-menu>
+  </div>
+  <div class="twelve wide column">
+  <!--Search-->
+    <div class="search-bar">
+    <form class="ui right floated form" action="" method="">
+      <div class="inline fields">
+         <div class="ui inline field">
+        <input ng-model="homeData.query" class="ui input" type="text"></input>
+      </div>
+      <button class="ui blue button">Search</button>
+      </div>
+    </form>
+    </div>
+    <h2 class="ui center aligned header">Your Recent Notes</h2>
+      <div ng-repeat="note in homeData.notes | filter:homeData.query | orderBy: 'date':true" class="ui raised segment">
+        <h4 class="header">{{ note.kind }} from {{ note.author.username }}.</h4>
+        <p>{{ note.content }}</p>
+        <img ng-if="note.image.length == 1" class="ui medium centered rounded image" src="{{note.image[0]}}">
+        <jd-slider id="{{note._id}}" ng-if="note.image.length > 1" images="note.image"></jd-slider>
+        <span style="position: absolute; top: 15px; right: 20px;" am-time-ago="note.date"></span>
+        <a style="position: absolute; bottom: 15px; left: 20px;" href="/notes/reply/{{note.author.id}}" class="ui small button">Send one back?</a>
+        <div class="pull-right button-cluster">
+        <div style="width: 102px;">
+          <div style="float: left;" ng-mouseover="note.menu = true" ng-mouseleave="note.menu = false" ng-class="note.pinned ? 'blue' : ''" class="pin-button ui small vertical animated button" tabindex="0">
+            <div class="hidden content">Pin</div>
+            <div class="visible content">
+              <i class="pin icon"></i>
+            </div>
+          </div>
+          <div ng-show="note.menu"  ng-mouseover="note.menu = true" ng-mouseleave="note.menustay == false ? note.menu = false : ''" class="ui raised compact segments" style="min-width: 150px; max-height: 200px; overflow: auto; position:absolute; left: 29px; top: 18px; transform: translateX(-50%); z-index: 100;">
+            <div ng-repeat="group in homeData.groups"  ng-click="homeData.pin(note, group.groupName)" ng-class="group.groupName == note.group ? 'jdblue' : ''" class="ui center aligned segment">
+              <p>{{group.groupName}}</p>
+            </div>
+            <div class="ui center aligned form segment">
+              <div class="field">
+                <label>New Group</label>
+                <input ng-model="homeData.newGroup" type="text" ng-focus="note.menustay = true" ng-blur="note.menustay = false; note.menu = false" ng-keydown="$event.keyCode == 13 && homeData.pin(note, homeData.newGroup)" required>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ui labeled button" tabindex="0" style="margin-left: 10px">
+        <a ng-click="homeData.like(note._id)" ng-class="[note.liked ? 'red' : 'unliked']" class="ui mini button"><i class="heart icon"></i></a>
+        <a ng-class="{red: note.liked}" class="ui basic left pointing label">{{ note.likes.total }}</a>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

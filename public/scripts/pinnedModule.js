@@ -1,8 +1,8 @@
 angular.module("PinHub", ['angularMoment', 'Hub', 'Slider'])
 
-.controller("BodyCtrl", ["$scope", "DataService", function($scope, PinnedDataService, DataService){
-  $scope.currentUser = PinnedDataService.user;
-  $scope.$watch(function(){return PinnedDataService.user; }, function(user){
+.controller("BodyCtrl", ["$scope", "DataService", function($scope, DataService){
+  $scope.currentUser = DataService.user;
+  $scope.$watch(function(){return DataService.user; }, function(user){
     $scope.currentUser = user;
   });
 }])
@@ -32,20 +32,20 @@ angular.module("PinHub", ['angularMoment', 'Hub', 'Slider'])
     return "in " + item.thread;
     }
   };
-    $scope.pinnedData.like = function(id){
-    DataService.like(id);
-    for( var i in $scope.pinnedData.groups ){
-      for(var j in $scope.pinnedData.groups[i].notes){
-        if($scope.pinnedData.groups[i].notes[j]._id == id){
-          if($scope.pinnedData.groups[i].notes[j].liked){
-            $scope.pinnedData.groups[i].notes[j].likes.total--;
-            $scope.pinnedData.groups[i].notes[j].likes.users.splice($scope.pinnedData.groups[i].notes[j].likes.users.indexOf(String(PinnedDataService.user._id)), 1);
-            $scope.pinnedData.groups[i].notes[j].liked = false;
-          } else {
-            $scope.pinnedData.groups[i].notes[j].likes.total++;
-            $scope.pinnedData.groups[i].notes[j].likes.users.push(String(DataService.user._id));
-            $scope.pinnedData.groups[i].notes[j].liked = true;
-          }}}}};
+  $scope.pinnedData.like = function(id){
+  DataService.like(id);
+  for( var i in $scope.pinnedData.groups ){
+    for(var j in $scope.pinnedData.groups[i].notes){
+      if($scope.pinnedData.groups[i].notes[j]._id == id){
+        if($scope.pinnedData.groups[i].notes[j].liked){
+          $scope.pinnedData.groups[i].notes[j].likes.total--;
+          $scope.pinnedData.groups[i].notes[j].likes.users.splice($scope.pinnedData.groups[i].notes[j].likes.users.indexOf(String(DataService.user._id)), 1);
+          $scope.pinnedData.groups[i].notes[j].liked = false;
+        } else {
+          $scope.pinnedData.groups[i].notes[j].likes.total++;
+          $scope.pinnedData.groups[i].notes[j].likes.users.push(String(DataService.user._id));
+          $scope.pinnedData.groups[i].notes[j].liked = true;
+        }}}}};
           
   $scope.pinnedData.unpin = function(id){
     DataService.unpin(id);
@@ -64,5 +64,8 @@ angular.module("PinHub", ['angularMoment', 'Hub', 'Slider'])
   $scope.refreshPin = function(){
     DataService.refreshPin();
     console.log("refreshed pin from pin")
+  };
+  $scope.refreshHome = function(){
+    DataService.refreshHome();
   };
 }]);

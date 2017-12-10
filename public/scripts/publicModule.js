@@ -21,16 +21,16 @@ angular.module("Hub", ['angularMoment', 'Slider'])
     $scope.publicData.groups = groups;
   });
   $scope.$watch(function(){return DataService.publicNotes; }, function(notes){
-      if($scope.publicData.thread){
-        var filteredNotes = [];
-        for(var x in notes){
-          if(notes[x].thread == $scope.publicData.thread){
-            filteredNotes.push(notes[x]);
-          }
+    if($scope.publicData.thread){
+      var filteredNotes = [];
+      for(var x in notes){
+        if(notes[x].thread == $scope.publicData.thread){
+          filteredNotes.push(notes[x]);
         }
-        notes = filteredNotes;
       }
-      for( var i in notes ){
+      notes = filteredNotes;
+    }
+    for( var i in notes ){
       notes[i].menu = false;
       notes[i].menustay = false;
       notes[i].group = '';
@@ -98,11 +98,12 @@ angular.module("Hub", ['angularMoment', 'Slider'])
   };
   $scope.refreshPub = function(){
     DataService.refreshPub();
-    console.log("refreshed pub from pub")
   };
   $scope.refreshPin = function(){
     DataService.refreshPin();
-    console.log("refreshed pin from pub")
+  };
+  $scope.refreshHome = function(){
+    DataService.refreshHome();
   };
 }])
 
@@ -142,6 +143,16 @@ angular.module("Hub", ['angularMoment', 'Slider'])
   dataService.refreshPin = function(){
     $http.get("/ajax/pinneduser").then(function(response){
       dataService.pinnedNoteGroups = response.data.pinnedNoteGroups;
+      dataService.personalNotes = response.data.receivedNotes;
+    }).catch(function(error){
+      console.log(error);
+    });
+  };
+  
+  dataService.refreshHome = function(){
+    $http.get("/ajax/pinneduser").then(function(response){
+      dataService.groups = response.data.pinnedNoteGroups;
+      dataService.personalNotes = response.data.receivedNotes;
     }).catch(function(error){
       console.log(error);
     });
@@ -171,9 +182,10 @@ angular.module("Hub", ['angularMoment', 'Slider'])
              dataService.user.pinnedNoteGroups[i].notes.push(id);
           }
       } else {
-        for(var i in dataService.user.pinnedNoteGroups)
-        if(dataService.user.pinnedNoteGroups[i].notes.indexOf(id)>-1){
-          dataService.user.pinnedNoteGroups[i].notes.splice(dataService.user.pinnedNoteGroups[i].notes.indexOf(id), 1);
+        for(var i in dataService.user.pinnedNoteGroups){
+          if(dataService.user.pinnedNoteGroups[i].notes.indexOf(id)>-1){
+            dataService.user.pinnedNoteGroups[i].notes.splice(dataService.user.pinnedNoteGroups[i].notes.indexOf(id), 1);
+          }
         }
       }
     });
@@ -196,6 +208,7 @@ angular.module("Hub", ['angularMoment', 'Slider'])
     $http.get("/ajax/pinneduser").then(function(response){
       dataService.user = response.data;
       dataService.pinnedNoteGroups = response.data.pinnedNoteGroups;
+      dataService.personalNotes = response.data.receivedNotes;
     });
     
     $http.get("/ajax/threads").then(function(response){

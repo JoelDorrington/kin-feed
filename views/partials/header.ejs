@@ -1,24 +1,28 @@
 <!DOCTYPE html>
 <html ng-app="FamilyApp">
 <head>
-  <title>Relative Society</title>
+  <title>KinFeed</title>
+  <!--Google Fonts-->
+  <link href="https://fonts.googleapis.com/css?family=Courgette|Philosopher" rel="stylesheet">
   <!--Semantic UI Link-->
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css"></link>
   <!--Custom Styles Link-->
   <link rel="stylesheet" type="text/css" href="/styles/style.css"></link>
 </head>
 <body>
-  <div class="ui large top fixed menu">
-  <a class="item" href="/hub"><i class="users icon"></i>Relative Society</a>
+  <div class="ui large top fixed inverted menu">
+  <a class="item" href="/view#/home"><i class="users icon"></i>KinFeed</a>
   <div class="right menu">
   <% if(!currentUser){ %>
       <a class="item" href="/login">Log in</a>
       <a class="item" href="/register">Sign up</a>
     <% } else { %>  
+      <a href="/profile">
       <div class="borderless item">
-        <img class="ui avatar image" src="<%= currentUser.avatar %>">
-        <a href="/profile">Hi, <%= currentUser.username %>!</a>
-        </div>
+        <img class="ui avatar image" src="../<%= currentUser.avatar %>">
+        Hi, <%= currentUser.username %>!
+      </div>
+      </a>
       <a class="item" href="/logout">Log out</a>
     <% } %>
   </div>
