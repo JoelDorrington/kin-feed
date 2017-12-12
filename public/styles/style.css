@@ -39,6 +39,7 @@ a.item, label {
 .pull-right.button-cluster {
   position: relative;
   width: 161px;
+  height: 33px;
   left: 80%;
   overflow: visible;
 }

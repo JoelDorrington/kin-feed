@@ -19,7 +19,8 @@ var express = require("express"),
 router.get("/new", helpers.isLoggedIn, function(req, res){
   User.find({}, function(err, users){
     if(err){
-      console.log(err);
+      req.flash("error", err);
+      res.render("notes/new", {users: []});
     } else {
       res.render("notes/new", {users: users});
     }
@@ -33,7 +34,8 @@ router.get("/new/:thread", helpers.isLoggedIn, function(req, res){
 router.get("/reply/:id", helpers.isLoggedIn, function(req, res){
   User.findById(req.params.id, function(err, recip){
     if(err){
-      console.log(err);
+      req.flash("error", err);
+      res.render("notes/new", {users: []});
     } else {
       res.render("notes/reply", {recipient: recip});
     }
@@ -76,21 +78,35 @@ router.post("/", helpers.isLoggedIn, upload.array('photo'), function(req, res){
   }
   var Author = {id: req.user._id, username: req.user.username};
   newNote.author = Author;
-  if(newNote.recipient){
-    User.findById(newNote.recipient, function(err, user){
-      if(err){
-        console.log(err);
-      } else {
-        helpers.createNote(newNote, user, res);
-      }
-    });
+  if(!newNote.pub && newNote.recipient === "null"){
+    req.flash("error", "Please choose a recipient for this private post.");
+    res.redirect("back");
+  }
+  else if(newNote.recipient){
+    if(newNote.recipient === "null"){
+      newNote.recipient = {};
+      newNote.recipient.username = "Everyone";
+      newNote.recipient._id = null;
+      helpers.createNote(newNote, null, res, req);
+    }
+    else{
+      User.findById(newNote.recipient, function(err, user){
+        if(err){
+          req.flash("error", err.message);
+          res.redirect("back");
+        } else {
+          helpers.createNote(newNote, user, res, req);
+        }
+      }); 
+    }
   } else {
     newNote.thread = req.body.thread;
     Thread.find({theme: req.body.thread}, function(err, threads){
       if(err){
-        console.log(err);
+        req.flash("error", err.message);
+        res.redirect("back");
       } else {
-        helpers.createNote(newNote, threads[0], res);
+        helpers.createNote(newNote, threads[0], res, req);
       }
     });
   }

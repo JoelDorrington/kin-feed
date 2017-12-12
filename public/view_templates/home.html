@@ -43,9 +43,12 @@
             </div>
           </div>
         </div>
-        <div class="ui labeled button" tabindex="0" style="margin-left: 10px">
+        <div ng-if="note.pub" class="ui labeled button" tabindex="0" style="margin-left: 10px">
         <a ng-click="homeData.like(note._id)" ng-class="[note.liked ? 'red' : 'unliked']" class="ui mini button"><i class="heart icon"></i></a>
         <a ng-class="{red: note.liked}" class="ui basic left pointing label">{{ note.likes.total }}</a>
+        </div>
+        <div ng-if="!note.pub" tabindex="0" style="margin-right: 0;">
+        <a class="ui mini disabled button" style="height: 33px; width: 82px; padding: auto;">Private</a>
         </div>
         </div>
       </div>

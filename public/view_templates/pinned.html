@@ -19,7 +19,7 @@
     <div ng-repeat="group in pinnedData.groups | orderBy: 'groupName'">
       <h2 id="{{group.groupName}}" class="ui center aligned medium header">{{group.groupName}}</h2>
       <div ng-repeat="item in group.notes | filter:publicData.query | orderBy: 'date':true" class="ui raised segment">
-        <h4 class="header">{{ item.kind }} from {{ item.author.username }}.</h4>
+        <h4 class="header">{{item.kind}} from {{ item.author.username }}{{pinnedData.recipOrThread(item)}}.</h4>
         <p>{{ item.content }}</p>
         <img ng-if="item.image.length == 1" class="ui medium centered rounded image" src="{{item.image[0]}}">
         <jd-slider id="{{item._id}}" ng-if="item.image.length > 1" images="item.image"></jd-slider>
@@ -33,9 +33,12 @@
             </div>
           </div>
         </div>
-        <div class="ui labeled button" tabindex="0" style="margin-left: 10px">
+        <div ng-if="item.pub" class="ui labeled button" tabindex="0" style="margin-left: 10px">
         <a ng-click="pinnedData.like(item._id)" ng-class="[item.liked ? 'red' : 'unliked']" class="ui mini button"><i class="heart icon"></i></a>
         <a ng-class="{red: item.liked}" class="ui basic left pointing label">{{ item.likes.total }}</a>
+        </div>
+        <div ng-if="!item.pub" tabindex="0" style="margin-right: 0;">
+        <a class="ui mini disabled button" style="height: 33px; width: 82px; padding: auto;">Private</a>
         </div>
         </div>
       </div>

@@ -21,36 +21,17 @@ router.get("/", function(req, res){
   res.render("home");
 });
 
-
-// Hub
-router.get("/hub", helpers.isLoggedIn, function(req, res){
-  User.findById(req.user._id).populate("receivedNotes").exec(function(err, user){
-    if(err){
-      console.log(err);
-    } else {
-      RecentActivity.findById("59c385ad74e35a2139738986").populate("notes").exec(function(err, activity){
-        if(err){
-          console.log(err);
-        } else {
-          res.render("hub", {user: user, moment: moment, activity: activity});
-        }
-      });
-    }
-  });
-});
-
 router.get("/view", helpers.isLoggedIn, function(req, res){
   res.sendFile("/home/ubuntu/workspace/FamilyWebsite/angular-hub.html");
-});
-
-router.get("/pinned", helpers.isLoggedIn, function(req, res){
-  res.sendFile("/home/ubuntu/workspace/FamilyWebsite/angular-pins.html");
 });
 
 router.post("/pin", helpers.isLoggedIn, function(req, res){
   var id = req.body.id;
   User.findById(req.user._id, function(err, user){
-    if(req.body.action){
+    if(err){
+      res.send(err);
+    } else {
+       if(req.body.action){
       var foundGroup = false;
       user.pinnedNoteGroups.forEach(function(group){
         if(group.groupName == req.body.groupName){
@@ -73,6 +54,7 @@ router.post("/pin", helpers.isLoggedIn, function(req, res){
     }
     user.save();
     res.send(user.pinnedNoteGroups);
+    }
   });
 });
 
@@ -86,7 +68,8 @@ router.post("/register", upload.single('avatar'), function(req, res){
   helpers.processAvatar(req.file.path, req.body.username, ext, function(path){
       User.register(new User({username: req.body.username, email: req.body.email, avatar: path}), req.body.password, function(err, user){
         if(err){
-          console.log(err);
+          req.flash("error", err);
+          res.redirect("back");
         } else {
           passport.authenticate("local")(req, res, function(){
             res.redirect("/view#/home");
@@ -106,9 +89,10 @@ router.post('/profile', helpers.isLoggedIn, upload.single('avatar'), function(re
   helpers.processAvatar(req.file.path, req.user.username, ext, function(path){
       User.findByIdAndUpdate(req.user._id, {$set: {avatar: path}}, function(err, user){
         if(err){
-          console.log(err);
+          req.flash("error", err);
+          res.redirect("back");
         } else {
-          res.redirect("/hub");
+          res.redirect("/view#/home");
         }
       });
   });
@@ -118,7 +102,8 @@ router.get("/deleteavatar", helpers.isLoggedIn, function(req, res){
   helpers.deleteAvatar(req.user.avatar);
   User.findByIdAndUpdate(req.user._id, {$set: {avatar: "/uploads/profilepic-placeholder.png"}}, function(err, user){
     if(err){
-      console.log(err);
+      req.flash("error", err);
+      res.redirect("back");
     } else {
       res.redirect("/view#/home");
     }

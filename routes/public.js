@@ -12,7 +12,8 @@ router.post("/thread/new", helpers.isLoggedIn, function(req, res){
   var newThread = {theme: req.body.theme, notes: []};
   Thread.create(newThread, function(err, thread){
     if(err){
-      console.log(err);
+      req.flash("error", err);
+      res.redirect("notes/new", {users: []});
     } else {
       res.redirect("/notes/new/" + thread.theme);
     }

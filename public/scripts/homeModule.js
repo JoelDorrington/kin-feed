@@ -46,20 +46,22 @@ angular.module("Home", ["Slider", "angularMoment", "Hub"])
     $scope.homeData.newGroup = '';
   };
   $scope.homeData.like = function(id){
-    DataService.like(id);
-    for( var i in $scope.homeData.notes ){
-      if($scope.homeData.notes[i]._id == id){
-        if($scope.homeData.notes[i].liked){
-          $scope.homeData.notes[i].likes.total--;
-          $scope.homeData.notes[i].likes.users.splice($scope.homeData.notes[i].likes.users.indexOf(String(DataService.user._id)), 1);
-          $scope.homeData.notes[i].liked = false;
-        } else {
-          $scope.homeData.notes[i].likes.total++;
-          $scope.homeData.notes[i].likes.users.push(String(DataService.user._id));
-          $scope.homeData.notes[i].liked = true;
+    DataService.like(id, function(){
+      for( var i in $scope.homeData.notes ){
+        if($scope.homeData.notes[i]._id == id){
+          if($scope.homeData.notes[i].liked){
+            $scope.homeData.notes[i].likes.total--;
+            $scope.homeData.notes[i].likes.users.splice($scope.homeData.notes[i].likes.users.indexOf(String(DataService.user._id)), 1);
+            $scope.homeData.notes[i].liked = false;
+          } else {
+            $scope.homeData.notes[i].likes.total++;
+            $scope.homeData.notes[i].likes.users.push(String(DataService.user._id));
+            $scope.homeData.notes[i].liked = true;
+          }
         }
-      }
-    }
+      }      
+    });
+
   };
   $scope.refreshHome = function(){
     DataService.refreshHome();

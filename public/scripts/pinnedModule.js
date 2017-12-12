@@ -1,12 +1,5 @@
 angular.module("PinHub", ['angularMoment', 'Hub', 'Slider'])
 
-.controller("BodyCtrl", ["$scope", "DataService", function($scope, DataService){
-  $scope.currentUser = DataService.user;
-  $scope.$watch(function(){return DataService.user; }, function(user){
-    $scope.currentUser = user;
-  });
-}])
-
 // PINNED CONTROLLER
 .controller("PinnedCtrl", ["$scope", "DataService", 'moment', '$routeParams', function($scope, DataService, moment, $routeParams){
   $scope.pinnedData = {};
@@ -27,25 +20,27 @@ angular.module("PinHub", ['angularMoment', 'Hub', 'Slider'])
   });
   $scope.pinnedData.recipOrThread = function(item){
     if(item.recipient){
-      return "to " + item.recipient.username;
+      return " to " + item.recipient.username;
     } else if (item.thread){
-    return "in " + item.thread;
+    return " in " + item.thread;
     }
   };
   $scope.pinnedData.like = function(id){
-  DataService.like(id);
-  for( var i in $scope.pinnedData.groups ){
-    for(var j in $scope.pinnedData.groups[i].notes){
-      if($scope.pinnedData.groups[i].notes[j]._id == id){
-        if($scope.pinnedData.groups[i].notes[j].liked){
-          $scope.pinnedData.groups[i].notes[j].likes.total--;
-          $scope.pinnedData.groups[i].notes[j].likes.users.splice($scope.pinnedData.groups[i].notes[j].likes.users.indexOf(String(DataService.user._id)), 1);
-          $scope.pinnedData.groups[i].notes[j].liked = false;
-        } else {
-          $scope.pinnedData.groups[i].notes[j].likes.total++;
-          $scope.pinnedData.groups[i].notes[j].likes.users.push(String(DataService.user._id));
-          $scope.pinnedData.groups[i].notes[j].liked = true;
-        }}}}};
+  DataService.like(id, function(){
+    for( var i in $scope.pinnedData.groups ){
+      for(var j in $scope.pinnedData.groups[i].notes){
+        if($scope.pinnedData.groups[i].notes[j]._id == id){
+          if($scope.pinnedData.groups[i].notes[j].liked){
+            $scope.pinnedData.groups[i].notes[j].likes.total--;
+            $scope.pinnedData.groups[i].notes[j].likes.users.splice($scope.pinnedData.groups[i].notes[j].likes.users.indexOf(String(DataService.user._id)), 1);
+            $scope.pinnedData.groups[i].notes[j].liked = false;
+          } else {
+            $scope.pinnedData.groups[i].notes[j].likes.total++;
+            $scope.pinnedData.groups[i].notes[j].likes.users.push(String(DataService.user._id));
+            $scope.pinnedData.groups[i].notes[j].liked = true;
+    } } } }  
+  });
+  };
           
   $scope.pinnedData.unpin = function(id){
     DataService.unpin(id);

@@ -2,6 +2,11 @@ angular.module("Hub", ['angularMoment', 'Slider'])
 
 .controller("BodyCtrl", ["$scope", "DataService", function($scope, DataService){
   $scope.currentUser = DataService.user;
+  $scope.jdError = DataService.error;
+  $scope.$watch(function(){return DataService.error; }, function(error){
+    $scope.jdError = error;
+    console.log($scope.jdError);
+  });
   $scope.$watch(function(){return DataService.user; }, function(user){
     $scope.currentUser = user;
   });
@@ -15,7 +20,7 @@ angular.module("Hub", ['angularMoment', 'Slider'])
   $scope.publicData.groups = [];
   $scope.publicData.threads = DataService.threads;
   $scope.publicData.publicNotes = DataService.publicNotes;
-  $scope.publicData.query = $routeParams.query || '';
+  $scope.publicData.query = '';
   // Watch Notes
   $scope.$watch(function(){if(DataService.userfound){return DataService.groups}}, function(groups){
     $scope.publicData.groups = groups;
@@ -57,20 +62,21 @@ angular.module("Hub", ['angularMoment', 'Slider'])
   });
   // Like Function
   $scope.publicData.like = function(id){
-    DataService.like(id);
-    for( var i in $scope.publicData.publicNotes ){
-      if($scope.publicData.publicNotes[i]._id == id){
-        if($scope.publicData.publicNotes[i].liked){
-          $scope.publicData.publicNotes[i].likes.total--;
-          $scope.publicData.publicNotes[i].likes.users.splice($scope.publicData.publicNotes[i].likes.users.indexOf(String(DataService.user._id)), 1);
-          $scope.publicData.publicNotes[i].liked = false;
-        } else {
-          $scope.publicData.publicNotes[i].likes.total++;
-          $scope.publicData.publicNotes[i].likes.users.push(String(DataService.user._id));
-          $scope.publicData.publicNotes[i].liked = true;
+    DataService.like(id, function(){
+      for( var i in $scope.publicData.publicNotes ){
+        if($scope.publicData.publicNotes[i]._id == id){
+          if($scope.publicData.publicNotes[i].liked){
+            $scope.publicData.publicNotes[i].likes.total--;
+            $scope.publicData.publicNotes[i].likes.users.splice($scope.publicData.publicNotes[i].likes.users.indexOf(String(DataService.user._id)), 1);
+            $scope.publicData.publicNotes[i].liked = false;
+          } else {
+            $scope.publicData.publicNotes[i].likes.total++;
+            $scope.publicData.publicNotes[i].likes.users.push(String(DataService.user._id));
+            $scope.publicData.publicNotes[i].liked = true;
+          }
         }
       }
-    }
+    });
   };
   $scope.publicData.viewThread = function(theme){
     $scope.publicData.query = theme;
@@ -110,12 +116,26 @@ angular.module("Hub", ['angularMoment', 'Slider'])
 // DATA SERVICE
 .service("DataService", function($http, $routeParams){
   var dataService = {};
+  dataService.error = {
+    error: false,
+    message: '',
+    response: ''
+  };
   
   dataService.userfound = false;
   
-  dataService.like = function(id){
+  dataService.like = function(id, cb){
     $http.get("/notes/likes/" + id).then(function(response){
       dataService.likes = response.data.likes;
+      cb();
+    }).catch(function(error){
+      var _ = {
+          error: true,
+          message: "Sorry, we were unable to do that",
+          response: error.statusText
+        };
+        console.log(error);
+        dataService.error = _;
     });
   };
   
@@ -128,15 +148,30 @@ angular.module("Hub", ['angularMoment', 'Slider'])
       $http.get("/ajax/notes").then(function(response){
         dataService.publicNotes = response.data;
       }).catch(function(error){
-        console.log(error);
+        var _ = {
+          error: true,
+          message: "Sorry, we were unable to retrieve public posts",
+          response: error.statusText
+        };
+        dataService.error = _;
       });
     }).catch(function(error){
-      console.log(error);
+      var _ = {
+          error: true,
+          message: "Sorry, we were unable to retrieve your user data",
+          response: error.statusText
+        };
+        dataService.error = _;
     });
     $http.get("/ajax/threads").then(function(response){
       dataService.threads = response.data;
     }).catch(function(error){
-      console.log(error);
+      var _ = {
+          error: true,
+          message: "Sorry, we were unable to retrieve thread data",
+          response: error.statusText
+        };
+        dataService.error = _;
     });
   };
   
@@ -145,16 +180,26 @@ angular.module("Hub", ['angularMoment', 'Slider'])
       dataService.pinnedNoteGroups = response.data.pinnedNoteGroups;
       dataService.personalNotes = response.data.receivedNotes;
     }).catch(function(error){
-      console.log(error);
+      var _ = {
+          error: true,
+          message: "Sorry, we were unable to retrieve your user data",
+          response: error.statusText
+        };
+        dataService.error = _;
     });
   };
   
   dataService.refreshHome = function(){
-    $http.get("/ajax/pinneduser").then(function(response){
+    $http.get("/ajax/personalnotes").then(function(response){
       dataService.groups = response.data.pinnedNoteGroups;
       dataService.personalNotes = response.data.receivedNotes;
     }).catch(function(error){
-      console.log(error);
+      var _ = {
+          error: true,
+          message: "Sorry, we were unable to retrieve your user data",
+          response: error.statusText
+        };
+        dataService.error = _;
     });
   };
   
@@ -165,7 +210,14 @@ angular.module("Hub", ['angularMoment', 'Slider'])
     };
     $http.post("/pin", data).then(function(response){
       dataService.pinnedNoteGroups = response.data;
-    });
+    }).catch(function(error){
+      var _ = {
+          error: true,
+          message: "Sorry, we were unable to unpin that post",
+          response: error.statusText
+        };
+        dataService.error = _;
+    })
   };
   
   dataService.pin = function(pin, id, groupName){
@@ -188,7 +240,14 @@ angular.module("Hub", ['angularMoment', 'Slider'])
           }
         }
       }
-    });
+    }).catch(function(error){
+      var _ = {
+          error: true,
+          message: "Sorry, we were unable to do that",
+          response: error.statusText
+        };
+        dataService.error = _;
+    })
   };
   // Fetch Current User
     $http.get("/ajax/user").then(function(response){
@@ -199,22 +258,46 @@ angular.module("Hub", ['angularMoment', 'Slider'])
       $http.get("/ajax/notes").then(function(response){
         dataService.publicNotes = response.data;
       }).catch(function(error){
-        console.log(error);
+        var _ = {
+          error: true,
+          message: "Sorry, we were unable to retrieve public posts",
+          response: error.statusText
+        };
+        dataService.error = _;
+        console.log(dataService.error);
       });
     }).catch(function(error){
-      console.log(error);
+      var _ = {
+          error: true,
+          message: "Sorry, we were unable to retrieve your user data",
+          response: error.statusText
+        };
+        dataService.error = _;
+      console.log(dataService.error);
     });
     
     $http.get("/ajax/pinneduser").then(function(response){
       dataService.user = response.data;
       dataService.pinnedNoteGroups = response.data.pinnedNoteGroups;
       dataService.personalNotes = response.data.receivedNotes;
-    });
+    }).catch(function(error){
+      var _ = {
+          error: true,
+          message: "Sorry, we were unable to retrieve your user data",
+          response: error.statusText
+        };
+        dataService.error = _;
+    })
     
     $http.get("/ajax/threads").then(function(response){
       dataService.threads = response.data;
     }).catch(function(error){
-      console.log(error);
+      var _ = {
+          error: true,
+          message: "Sorry, we were unable to retrieve thread data",
+          response: error.statusText
+        };
+        dataService.error = _;
     });
 
   return dataService;
@@ -232,4 +315,4 @@ angular.module("Hub", ['angularMoment', 'Slider'])
     restrict: 'E',
     templateUrl: "view_templates/threads.html"
   };
-})
+});
