@@ -10,17 +10,6 @@ var helpers = {},
   RecentActivity = require("../models/recent-activity");
   
 const nodemailer = require('nodemailer');
-var options = {
-  port: 587,
-  host: 'smtp-mail.outlook.com',
-  auth: {
-    user: 'joel_dorrington@hotmail.com',
-    pass: 'Nitemare0'
-  },
-  tls: {
-    rejectUnauthorized: false
-  }
-};
 
 helpers.isLoggedIn = function(req, res, next){
   if(req.isAuthenticated()){
@@ -47,23 +36,39 @@ helpers.createNote = function(x, destination, res, req){
           note.recipient.id = destination._id;
           note.recipient.username = destination.username;
           console.log("Emailing...");
-          let transporter = nodemailer.createTransport(options);
-
-          let mailOptions = {
-            from: '"KinFeed" <joel_dorrington@hotmail.com>',
-            to: 'joel.dorrington0@gmail.com',
-            subject: "Someone posted on your wall!",
-            html: `
-            <h1>Test Email</h1>
-            `
-          };
-          transporter.sendMail(mailOptions, function(err, info){
-            if(err){
-              console.log(err);
-            } else {
-              console.log("Message sent: %s", info.messageId);
+          // 
+          // EMAIL CONFIG
+          // vvvvvvvvvvvv
+          let smtpTransport = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
+            service: "Gmail",
+            auth: {
+              type: "OAuth2",
+              user: "joel.dorrington0@gmail.com",
+              clientId: "889654612616-oj1ckgtbeei8eoqja9aaaggtgv3l0cr7.apps.googleusercontent.com",
+              clientSecret: "EydF-KrgYOv5qPl-zEKEYLVw",
+              refreshToken: "1/UONY8gpqX8yzxQKAJXUSobAPyhHl1k0tavc61GwS6Ug"
             }
           });
+
+          let mailOptions = {
+            from: '"KinFeed" <joel.dorrington0@gmail.com>',
+            to: destination.email,
+            subject: x.author.username + " posted on your wall!",
+            html: `
+            <h1>New Post!</h1>
+            <p>${x.author.username} posted on your wall! Check it out!</p>
+            `
+          };
+          smtpTransport.sendMail(mailOptions, function(err, info){
+            if(err){
+              console.log(err);
+            }
+            smtpTransport.close();
+          });
+        // END EMAIL CONFIG
         }
       }
       note.save();
