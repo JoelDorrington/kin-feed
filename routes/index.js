@@ -21,7 +21,7 @@ router.get("/", function(req, res){
 });
 
 router.get("/view", helpers.isLoggedIn, function(req, res){
-  res.sendFile("/home/ubuntu/workspace/FamilyWebsite/angular-hub.html");
+  res.sendFile(__dirname + "angular-hub.html");
 });
 
 router.post("/pin", helpers.isLoggedIn, function(req, res){
