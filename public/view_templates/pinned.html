@@ -1,9 +1,9 @@
 <div class="ui three column grid">
   <!--Vertical Menu Bar-->
   <div class="left floated four wide column" >
-    <nav-menu style="position: fixed; width: 261px;"></nav-menu>
+    <nav-menu id="nav-menu" style="position: fixed; width: 261px;"></nav-menu>
   </div>
-  <div class="twelve wide column">
+  <div id="app-body" class="sixteen wide mobile twelve wide computer twelve wide tablet column">
   <!--Search-->
     <div class="search-bar">
     <form class="ui right floated form" action="" method="">
@@ -16,14 +16,14 @@
     </form>
     </div>
     <h2 class="ui center aligned header">Your Pinned Notes</h2>
+    <div class="ui divider"></div>
+    <div class="ui segment" ng-if="pinnedData.groups.length < 1">
+      <p style="text-align: center;">Nothing pinned yet. Go find something to remember!</p>
+    </div>
     <div ng-repeat="group in pinnedData.groups | orderBy: 'groupName'">
       <h2 id="{{group.groupName}}" class="ui center aligned medium header">{{group.groupName}}</h2>
       <div ng-repeat="item in group.notes | filter:publicData.query | orderBy: 'date':true" class="ui raised segment">
-        <h4 class="header">{{item.kind}} from {{ item.author.username }}{{pinnedData.recipOrThread(item)}}.</h4>
-        <p>{{ item.content }}</p>
-        <img ng-if="item.image.length == 1" class="ui medium centered rounded image" src="{{item.image[0]}}">
-        <jd-slider id="{{item._id}}" ng-if="item.image.length > 1" images="item.image"></jd-slider>
-        <span style="position: absolute; top: 15px; right: 20px;" am-time-ago="item.date"></span>
+        <jd-note-header item="item"></jd-note-header>
         <div class="pull-right button-cluster">
         <div style="width: 102px;">
           <div ng-click="pinnedData.unpin(item._id)" style="float: left;" class="pin-button blue ui small vertical animated button" tabindex="0">

@@ -1,13 +1,28 @@
 <% include ./partials/header %>
+<div class="ui container">
+  <div class="ui grid">
+    <div class="ui eight wide centered column">
+      <h1>Sign up to share memories with the family!</h1>
 
-<h1>Sign up to leave encouraging comments for the family</h1>
-
-<form action="/register" enctype="multipart/form-data" method="POST">
-  <input type="text" placeholder="Name" name="username"></input>
-  <input type="email" placeholder="Email" name="email"></input>
-  <input type="password" placeholder="Password" name="password"></input>
-  <input type="file" name="avatar">
-  <button>Sign up</button>
-</form>
+      <form class="ui form" action="/register" enctype="multipart/form-data" method="POST">
+        <div class="two fields">
+          <div class="field">
+            <input type="text" placeholder="Name" name="username" required></input>
+          </div>
+          <div class="field">
+            <input type="password" placeholder="Password" name="password" required></input>
+          </div>
+        </div>
+        <div class="field">
+          <input type="email" placeholder="Email" name="email" required></input>
+        </div>
+        <div class="field">
+          <input type="file" name="avatar">
+        </div>
+        <button class="ui blue fluid button">Sign up</button>
+      </form>
+    </div>
+  </div>
+</div>
 
 <% include ./partials/footer %>

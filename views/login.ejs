@@ -1,11 +1,22 @@
 <% include ./partials/header %>
 <div class="ui container">
-<h1>Login</h1>
+  <div class="ui grid">
+    <div class="ui three column row">
+      <div class="ui six wide centered column">
+        <h1>Login</h1>
+        
+        <form class="ui small form" action="/login" method="POST">
+          <div class="field">
+            <input type="text" placeholder="Username" name="username"></input>
+          </div>
+          <div class="field">
+            <input type="password" placeholder="Password" name="password"></input>
+          </div>
+          <button class="ui blue button">Log in</button>
+        </form>
+      </div>
+    </div>
+  </div>
 
-<form action="/login" method="POST">
-  <input type="text" placeholder="Username" name="username"></input>
-  <input type="password" placeholder="Password" name="password"></input>
-  <button>Log in</button>
-</form>
 </div>
 <% include ./partials/footer %>

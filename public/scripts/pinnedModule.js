@@ -1,4 +1,4 @@
-angular.module("PinHub", ['angularMoment', 'Hub', 'Slider'])
+angular.module("PinHub", ['angularMoment', 'Hub', "NoteContent"])
 
 // PINNED CONTROLLER
 .controller("PinnedCtrl", ["$scope", "DataService", 'moment', '$routeParams', function($scope, DataService, moment, $routeParams){

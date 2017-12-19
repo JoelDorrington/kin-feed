@@ -18,20 +18,54 @@
         <h1 class="ui huge header">Leave a note in the <%=thread%> thread.</h1>
       <% } %>
       <form action="/notes" method="POST" enctype="multipart/form-data" class="ui form">
+        <!--TITLE-->
         <div class="field">
-          <label>Note Type</label>
+          <label>Title</label>
+          <input type="text" name="note[title]" class="ui input" placeholder="Required" required>
+        </div>
+        <!--End title-->
+        <div class="two fields">
+        <!--NOTE TYPE-->
+        <div class="field">
+          <label>Feeling...</label>
           <div class="ui selection dropdown">
-            <input type="hidden" name="note[kind]" id="kind" required>
+            <input type="hidden" name="note[kind]" id="kind">
             <i class="dropdown icon"></i>
-            <div class="default text">Note Type</div>
+            <div class="default text">Emotion</div>
             <div class="menu">
-              <div class="item" data-value="Gratitude">Gratitude</div>
-              <div class="item" data-value="Admiration">Admiration</div>
-              <div class="item" data-value="Memory">Memory</div>
-              <div class="item" data-value="Encouragement">Encouragement</div>
+              <div class="item" data-value="Grateful">Grateful</div>
+              <div class="item" data-value="Happy">Happy</div>
+              <div class="item" data-value="Nostalgic">Nostalgic</div>
+              <div class="item" data-value="Amused">Amused</div>
+              <div class="item" data-value="Sad">Sad</div>
+              <div class="item" data-value="Amazed">Amazed</div>
             </div>
           </div>
         </div>
+        <!--End note type-->
+        <!--RECIPIENT-->
+        <div class="field">
+          <label><%= users ? "Recipient" : "Thread" %></label>
+          <% if(users){ %>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="note[recipient]" value="null">
+              <i class="dropdown icon"></i>
+              <div class="default text">Everyone</div>
+              <div class="menu">
+                  <% users.forEach(function(user){ %>
+                    <% if(!user._id.equals(currentUser._id)){ %>
+                      <div class="item" data-value="<%= user._id %>"><img class="ui avatar image" src="../<%= user.avatar %>"><%= user.username %></div>
+                    <% } %>
+                  <% }) %>
+              </div>
+            </div>
+          <% } else { %>
+            <input name="thread" value="<%= thread %>" class="ui disabled input">
+          <% } %>
+        </div>
+        <!--End recipient-->
+        </div>
+        <!--PUBLIC CHECKBOXES-->
         <div id="pub-priv" class="inline fields">
           <label for="pub">Public or Private?</label>
           <div class="field">
@@ -49,33 +83,19 @@
             </div>
           <% } %>
         </div>
+        <!--End public checkboxes-->
+        <!--IMAGE-->
         <div class="field">
-          <label><%= users ? "Recipient" : "Thread" %></label>
-          <% if(users){ %>
-            <div class="ui selection dropdown">
-              <input type="hidden" name="note[recipient]" value="null" required>
-              <i class="dropdown icon"></i>
-              <div class="default text">Recipient</div>
-              <div class="menu">
-                  <% users.forEach(function(user){ %>
-                    <% if(!user._id.equals(currentUser._id)){ %>
-                      <div class="item" data-value="<%= user._id %>"><%= user.username %></div>
-                    <% } %>
-                  <% }) %>
-              </div>
-            </div>
-          <% } else { %>
-            <input name="thread" value="<%= thread %>" class="ui disabled input">
-          <% } %>
-        </div>
-        <div class="field">
-          <label>Image</label>
+          <label>Images</label>
           <input type="file" name="photo" multiple></input>
         </div>
+        <!--End image-->
+        <!--CONTENT-->
         <div class="field">
-          <label>Note</label>
+          <label>Content</label>
           <textarea class="" name="note[content]" lines="2" required></textarea>
         </div>
+        <!--End content-->
         <button class="ui button" type="submit">Submit</button>
       </form>
     </div>

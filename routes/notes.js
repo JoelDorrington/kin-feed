@@ -76,7 +76,7 @@ router.post("/", helpers.isLoggedIn, upload.array('photo'), function(req, res){
   } else {
     newNote.pub = false;
   }
-  var Author = {id: req.user._id, username: req.user.username};
+  var Author = {id: req.user._id, username: req.user.username, avatar: req.user.avatar};
   newNote.author = Author;
   if(!newNote.pub && newNote.recipient === "null"){
     req.flash("error", "Please choose a recipient for this private post.");

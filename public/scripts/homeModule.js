@@ -1,4 +1,4 @@
-angular.module("Home", ["Slider", "angularMoment", "Hub"])
+angular.module("Home", ["angularMoment", "Hub", "NoteContent"])
 
 .controller("HomeCtrl", ["$scope", "DataService", function($scope, DataService){
   $scope.homeData = {};

@@ -31,11 +31,19 @@
   </div>
   <div class="ui container" ng-view></div>
 
+<div id="mobile-nav" class="ui bottom fixed four item icon menu">
+  <a href="/view#/home" class="mobile-item ui item"><i class="home icon"></i></a>
+  <a href="/notes/new" class="mobile-item ui item"><i class="edit icon"></i></a>
+  <a href="/view#/pinned" class="mobile-item ui item"><i class="pin icon"></i></a>
+  <a href="/view#/public" class="mobile-item ui item"><i class="comments icon"></i></a>
+</div>
+
 <script src="lib/angular.min.js"></script>
 <script src="scripts/moment-with-locales.js"></script>
 <script src="scripts/angular-moment.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-animate.js"></script>
 <script src="lib/angular-route.min.js"></script>
+<script type="text/javascript" src="scripts/noteModule.js"></script>
 <script src="scripts/publicModule.js"></script>
 <script src="scripts/pinnedModule.js"></script>
 <script src="scripts/homeModule.js"></script>

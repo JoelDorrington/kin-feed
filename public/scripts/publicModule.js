@@ -1,4 +1,4 @@
-angular.module("Hub", ['angularMoment', 'Slider'])
+angular.module("Hub", ['angularMoment', 'NoteContent'])
 
 .controller("BodyCtrl", ["$scope", "DataService", function($scope, DataService){
   $scope.currentUser = DataService.user;
@@ -80,13 +80,6 @@ angular.module("Hub", ['angularMoment', 'Slider'])
   };
   $scope.publicData.viewThread = function(theme){
     $scope.publicData.query = theme;
-  };
-  $scope.publicData.recipOrThread = function(item){
-    if(item.recipient){
-      return "to " + item.recipient.username;
-    } else if (item.thread){
-    return "in " + item.thread;
-    }
   };
   $scope.publicData.pin = function(entry, groupName){
     entry.menustay = false;

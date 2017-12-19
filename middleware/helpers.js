@@ -35,6 +35,7 @@ helpers.createNote = function(x, destination, res, req){
         if(destination.username){
           note.recipient.id = destination._id;
           note.recipient.username = destination.username;
+          note.recipient.avatar = destination.avatar;
           console.log("Emailing...");
           // 
           // EMAIL CONFIG

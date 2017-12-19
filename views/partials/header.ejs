@@ -10,8 +10,13 @@
   <link rel="stylesheet" type="text/css" href="/styles/style.css"></link>
 </head>
 <body>
+  <% if(!currentUser){ %>
+  <% var link = "/" %>
+  <% } else { %>
+  <% var link = "/view#/home"%>
+  <% } %>
   <div class="ui large top fixed inverted menu">
-  <a class="item" href="/view#/home"><i class="users icon"></i>KinFeed</a>
+  <a class="item" id="logo" href="<%= link %>"><i class="users icon"></i>KinFeed</a>
   <div class="right menu">
   <% if(!currentUser){ %>
       <a class="item" href="/login">Log in</a>

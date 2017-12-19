@@ -1,0 +1,23 @@
+ <!--NOTE HEADER-->
+<h3 class="header">{{ item.title }}</h3>
+<hr class="note-hr">
+<p style="margin: 10px 0;">
+  <span style="background-color: #EEEEEE; border-radius: 3px; padding: 10px;">
+    <img style="position: relative; bottom: 2px;" class="ui avatar image" src="{{item.author.avatar}}">
+    <span style="font-size: 1.2em;">{{ item.author.username }}</span>
+  </span>
+   <i style="margin-left: 5px;" class="long arrow right icon"></i> 
+  <span style="background-color: #EEEEEE; border-radius: 3px; padding: 10px;">
+    <img ng-if="item.recipient.avatar" style="position: relative; bottom: 2px;" class="ui avatar image" src="{{item.recipient.avatar}}">
+    <span style="font-size: 1.2em;">{{recipOrThread(item)}}.</span>
+  </span>
+  <span ng-if="item.kind" style="background-color: #EEEEEE; border-radius: 3px; padding: 8px; font-size: 1.2em; margin-left: 15%;">Feeling: {{ item.kind }}</span>
+</p>
+<hr class="note-hr">
+<!--End Note Header-->
+<!--NOTE CONTENT-->
+<p class="content-area">{{ item.content }}</p>
+<img ng-if="item.image.length == 1" class="ui medium centered rounded image single-img" src="{{item.image[0]}}">
+<jd-slider id="{{item._id}}" ng-if="item.image.length > 1" images="item.image"></jd-slider>
+<span style="position: absolute; top: 15px; right: 20px;" am-time-ago="item.date"></span>
+<!--End Note Content-->

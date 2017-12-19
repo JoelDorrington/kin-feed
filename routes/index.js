@@ -2,6 +2,7 @@ var express = require("express"),
     router = express.Router({mergeParams: true}),
     moment = require("moment"),
     multer = require('multer'),
+    fs = require("fs"),
     storage = multer.diskStorage({
       destination: function(req, file, cb){
         cb(null, 'public/uploads');
@@ -64,11 +65,13 @@ router.get("/register", function(req, res){
 });
 
 router.post("/register", upload.single('avatar'), function(req, res){
-  var ext = req.file.mimetype.slice(req.file.mimetype.indexOf('/')+1);
-  helpers.processAvatar(req.file.path, req.body.username, ext, function(path){
+  if(req.file){
+    var ext = req.file.mimetype.slice(req.file.mimetype.indexOf('/')+1);
+    helpers.processAvatar(req.file.path, req.body.username, ext, function(path){
       User.register(new User({username: req.body.username, email: req.body.email, avatar: path}), req.body.password, function(err, user){
         if(err){
-          req.flash("error", err);
+          fs.unlink(path, function(){});
+          req.flash("error", err.message);
           res.redirect("back");
         } else {
           passport.authenticate("local")(req, res, function(){
@@ -76,7 +79,19 @@ router.post("/register", upload.single('avatar'), function(req, res){
           });
         }
       });
-  });
+    });
+  } else {
+    User.register(new User({username: req.body.username, email: req.body.email, avatar: "images/profilepic-placeholder.png"}), req.body.password, function(err, user){
+        if(err){
+          req.flash("error", err.message);
+          res.redirect("back");
+        } else {
+          passport.authenticate("local")(req, res, function(){
+            res.redirect("/view#/home");
+          });
+        }
+      });
+  }
 });
 
 // Change Avatar
@@ -89,7 +104,7 @@ router.post('/profile', helpers.isLoggedIn, upload.single('avatar'), function(re
   helpers.processAvatar(req.file.path, req.user.username, ext, function(path){
       User.findByIdAndUpdate(req.user._id, {$set: {avatar: path}}, function(err, user){
         if(err){
-          req.flash("error", err);
+          req.flash("error", err.message);
           res.redirect("back");
         } else {
           res.redirect("/view#/home");
@@ -102,7 +117,7 @@ router.get("/deleteavatar", helpers.isLoggedIn, function(req, res){
   helpers.deleteAvatar(req.user.avatar);
   User.findByIdAndUpdate(req.user._id, {$set: {avatar: "/uploads/profilepic-placeholder.png"}}, function(err, user){
     if(err){
-      req.flash("error", err);
+      req.flash("error", err.message);
       res.redirect("back");
     } else {
       res.redirect("/view#/home");
@@ -122,7 +137,7 @@ router.post("/login", passport.authenticate("local", {
 });
 router.get("/logout", function(req, res){
   req.logout();
-  res.redirect("/");
+  res.redirect("/login");
 });
 
 module.exports = router;

@@ -1,11 +1,12 @@
 <div class="ui three column grid">
-  <!--Vertical Menu Bar-->
+  <!--VERTICAL MENU BAR-->
   <div class="left floated four wide column">
-  <nav-menu style="position: fixed; width: 261px;"></nav-menu>
-  <threads style="position: fixed; top: 270px; width: 261px;"></threads>
+  <nav-menu id="nav-menu"></nav-menu>
+  <threads id="thread-display" style="position: fixed; top: 270px; width: 261px;"></threads>
   </div>
-  <div class="twelve wide column">
-  <!--Search-->
+  <!--End Vertical Menu Bar-->
+  <div id="app-body" class="sixteen wide mobile twelve wide computer twelve wide tablet column">
+    <!--SEARCH-->
     <div class="search-bar">
     <form class="ui right floated form" action="" method="">
       <div class="inline fields">
@@ -16,13 +17,11 @@
       </div>
     </form>
     </div>
+    <!--End Search-->
     <h2 class="ui center aligned header">Recent Public Notes</h2>
     <div ng-repeat="item in publicData.publicNotes | filter:publicData.query | orderBy: 'date':true" class="ui raised segment">
-      <h4 class="header">{{ item.kind }} from {{ item.author.username }} {{publicData.recipOrThread(item)}}.</h4>
-      <p>{{ item.content }}</p>
-      <img ng-if="item.image.length == 1" class="ui medium centered rounded image" src="{{item.image[0]}}">
-      <jd-slider id="{{item._id}}" ng-if="item.image.length > 1" images="item.image"></jd-slider>
-      <span style="position: absolute; top: 15px; right: 20px;" am-time-ago="item.date"></span>
+      <jd-note-header item="item"></jd-note-header>
+      <!--NOTE BUTTONS-->
       <div class="pull-right button-cluster">
         <div style="width: 102px;">
         <div style="float: left;" ng-mouseover="item.menu = true" ng-mouseleave="item.menu = false" ng-class="item.pinned ? 'blue' : ''" class="pin-button ui small vertical animated button" tabindex="0">
@@ -32,7 +31,7 @@
           </div>
         </div>
           <div ng-show="item.menu"  ng-mouseover="item.menu = true" ng-mouseleave="item.menustay == false ? item.menu = false : ''" class="ui raised compact segments" style="min-width: 150px; max-height: 200px; overflow: auto; position:absolute; left: 29px; top: 18px; transform: translateX(-50%); z-index: 100;">
-            <div ng-repeat="group in publicData.groups"  ng-click="publicData.pin(item, group.groupName)" ng-class="group.groupName == item.group ? 'jdblue' : ''" class="ui center aligned segment">
+            <div ng-repeat="group in publicData.groups"  ng-click="publicData.pin(item, group.groupName)" ng-class="group.groupName == item.group ? 'jdblue' : ''" class="ui center aligned segment group-item">
               <p>{{group.groupName}}</p>
             </div>
             <div class="ui center aligned form segment">
@@ -48,6 +47,7 @@
         <a ng-class="{red: item.liked}" class="ui basic left pointing label">{{ item.likes.total }}</a>
         </div>
       </div>
+      <!--End Note Buttons-->
     </div>
   </div>
 </div>

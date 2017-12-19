@@ -3,6 +3,7 @@ var mongoosePaginate = require("mongoose-paginate");
 var textSearch = require("mongoose-text-search");
 
 var NoteSchema = new mongoose.Schema({
+  title: String,
   kind: String,
   content: String,
   pub: Boolean,
@@ -12,14 +13,16 @@ var NoteSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
     },
-    username: String
+    username: String,
+    avatar: String
   },
   recipient: {
     id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
     },
-    username: String 
+    username: String,
+    avatar: String
   },
   likes: {
     total: Number,
