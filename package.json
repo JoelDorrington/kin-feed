@@ -4,7 +4,8 @@
   "description": "A website where a family culture can be built, avoiding conflicts.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "app.js"
   },
   "author": "Joel Dorrington",
   "license": "ISC",
