@@ -54,11 +54,9 @@ angular.module("PinHub", ['angularMoment', 'Hub', "NoteContent"])
         }}}};
   $scope.refreshPub = function(){
     DataService.refreshPub();
-    console.log('refreshed pub from pin')
   };
   $scope.refreshPin = function(){
     DataService.refreshPin();
-    console.log("refreshed pin from pin")
   };
   $scope.refreshHome = function(){
     DataService.refreshHome();

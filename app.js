@@ -13,7 +13,6 @@ var noteRoutes = require("./routes/notes"),
     ajaxRoutes = require("./routes/ajax"),
     indexRoutes = require("./routes/index");
 
-
 // Configure Mongoose and App
 mongoose.connect(process.env.DATABASEURL, {useMongoClient: true});
 mongoose.Promise = global.Promise;
@@ -52,6 +51,4 @@ app.use("/public", publicRoutes);
 app.use("/ajax", ajaxRoutes);
 app.use(indexRoutes);
 
-app.listen(process.env.PORT, process.env.IP, function(){
-  console.log("The family site is running.");
-});
+app.listen(process.env.PORT, process.env.IP);

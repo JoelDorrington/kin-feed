@@ -5,7 +5,6 @@ angular.module("Hub", ['angularMoment', 'NoteContent'])
   $scope.jdError = DataService.error;
   $scope.$watch(function(){return DataService.error; }, function(error){
     $scope.jdError = error;
-    console.log($scope.jdError);
   });
   $scope.$watch(function(){return DataService.user; }, function(user){
     $scope.currentUser = user;
@@ -127,7 +126,6 @@ angular.module("Hub", ['angularMoment', 'NoteContent'])
           message: "Sorry, we were unable to do that",
           response: error.statusText
         };
-        console.log(error);
         dataService.error = _;
     });
   };
@@ -257,7 +255,6 @@ angular.module("Hub", ['angularMoment', 'NoteContent'])
           response: error.statusText
         };
         dataService.error = _;
-        console.log(dataService.error);
       });
     }).catch(function(error){
       var _ = {
@@ -266,7 +263,6 @@ angular.module("Hub", ['angularMoment', 'NoteContent'])
           response: error.statusText
         };
         dataService.error = _;
-      console.log(dataService.error);
     });
     
     $http.get("/ajax/pinneduser").then(function(response){

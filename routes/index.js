@@ -1,6 +1,5 @@
 var express = require("express"),
     router = express.Router({mergeParams: true}),
-    moment = require("moment"),
     multer = require('multer'),
     fs = require("fs"),
     storage = multer.diskStorage({
@@ -13,7 +12,6 @@ var express = require("express"),
     }),
     upload = multer({storage: storage}),
     User = require("../models/user"),
-    RecentActivity = require("../models/recent-activity"),
     passport = require("passport"),
     helpers = require("../middleware/helpers");
     
