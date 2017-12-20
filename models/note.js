@@ -13,14 +13,16 @@ var NoteSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
     },
-    username: String
+    username: String,
+    avatar: String
   },
   recipient: {
     id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
     },
-    username: String
+    username: String,
+    avatar: String
   },
   likes: {
     total: Number,
