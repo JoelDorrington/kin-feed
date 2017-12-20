@@ -113,7 +113,7 @@ router.post('/profile', helpers.isLoggedIn, upload.single('avatar'), function(re
 
 router.get("/deleteavatar", helpers.isLoggedIn, function(req, res){
   helpers.deleteAvatar(req.user.avatar);
-  User.findByIdAndUpdate(req.user._id, {$set: {avatar: "/uploads/profilepic-placeholder.png"}}, function(err, user){
+  User.findByIdAndUpdate(req.user._id, {$set: {avatar: "https://kin-feed.herokuapp.com/uploads/profilepic-placeholder.png"}}, function(err, user){
     if(err){
       req.flash("error", err.message);
       res.redirect("back");
