@@ -54,7 +54,7 @@
               <div class="menu">
                   <% users.forEach(function(user){ %>
                     <% if(!user._id.equals(currentUser._id)){ %>
-                      <div class="item" data-value="<%= user._id %>"><img class="ui avatar image" src="../<%= user.avatar %>"><%= user.username %></div>
+                      <div class="item" data-value="<%= user._id %>"><img class="ui avatar image" src="<%= user.avatar %>"><%= user.username %></div>
                     <% } %>
                   <% }) %>
               </div>

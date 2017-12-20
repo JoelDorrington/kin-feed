@@ -79,7 +79,7 @@ router.post("/register", upload.single('avatar'), function(req, res){
       });
     });
   } else {
-    User.register(new User({username: req.body.username, email: req.body.email, avatar: "images/profilepic-placeholder.png"}), req.body.password, function(err, user){
+    User.register(new User({username: req.body.username, email: req.body.email, avatar: "https://kin-feed.herokuapp.com/uploads/profilepic-placeholder.png"}), req.body.password, function(err, user){
         if(err){
           req.flash("error", err.message);
           res.redirect("back");
