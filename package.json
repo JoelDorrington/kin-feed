@@ -13,6 +13,7 @@
     "@angular/core": "^5.0.1",
     "@sendgrid/mail": "^6.1.4",
     "angular2-moment": "^1.7.0",
+    "aws-sdk": "^2.172.0",
     "body-parser": "^1.18.1",
     "connect-flash": "^0.1.1",
     "ejs": "^2.5.7",

@@ -67,7 +67,7 @@ router.post("/", helpers.isLoggedIn, upload.array('photo'), function(req, res){
     newNote.image = [];
     req.files.forEach(function(file){
       helpers.processPhoto(file.path, file.filename, function(image){});
-      newNote.image.push('/uploads/sm' + file.filename);
+      newNote.image.push('https://s3.amazonaws.com/iMaGe-BuCkEt/' + file.filename);
     });
   }
   if(newNote.pub === "True"){
